@@ -22,6 +22,7 @@
     padding: 20px;
     background: white;
     border-top: 1px solid #ccc;
+    margin: 60px 0px 0px 0px;
   }
   .logo {
     font-size: 20px;
@@ -29,7 +30,6 @@
     color: #2b2b5e;
   }
   .contact p {
-    margin: 5px 0;
     font-size: 14px;
     color: #555;
   }

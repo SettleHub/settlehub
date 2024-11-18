@@ -3,8 +3,8 @@
     <HeaderBar />
     <div class="section-columns">
       <main class="column">
-       <HostelItemCard />
-       <HostelItemCard />
+       <HostleItemListCard />
+       <HostleItemListCard />
       <home/>
       </main>
     </div>
@@ -16,13 +16,13 @@
 <script>
 import FooterComponent from './components/Footer-component.vue';
 import HeaderBar from './components/Header-bar.vue';
-import HostelItemCard from './components/hostel-item-card.vue';
+import HostleItemListCard from './components/hostel-item-card.vue';
 
 export default {
   name: 'App',
   components: {
     HeaderBar,
-    HostelItemCard,
+    HostleItemListCard,
     FooterComponent
   }
 }
@@ -38,8 +38,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   background: 484848;
-  width:1920px ;
-  height: 1080px;
+  width:  1920px ;
+  height: 800px;
 }
 
 </style>

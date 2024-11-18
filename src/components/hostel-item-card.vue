@@ -31,7 +31,7 @@
 import SelectButton from './SelectButton.vue';
 
 export default {
-  name: 'DormitoryBlock',
+  name: 'HostleItemListCard',
   components: {
     SelectButton,
   },
