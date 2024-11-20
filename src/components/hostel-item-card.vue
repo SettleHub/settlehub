@@ -1,24 +1,18 @@
 <template>
   <div class="dorm-info">
     <!-- Виведення title з переданого пропса -->
-    <h2>Гуртожиток №2</h2>
+    <h2>{{ value.title }}</h2>
     <div class="dorm-details">
       <div class="dorm-description">
         <p><strong>Хто проживає в гуртожитку:</strong></p>
         <p>
-          Гуртожиток для студентів і аспірантів, які навчаються на факультетах
-          індустрії моди та культурних і креативних індустрій, інституті права
-          та сучасних технологій.
+          {{ value.description }}
         </p>
       </div>
       <div class="dorm-contact">
         <p><strong>Адреса гуртожитку та контакти:</strong></p>
-        <p>
-          <i class="icon-location"></i> вул. Бойчука Михайла, 13–6
-        </p>
-        <p>
-          <i class="icon-phone"></i> +36849168498
-        </p>
+        <p><i class="icon-location"></i> {{ value.address }}</p>
+        <p><i class="icon-phone"></i> {{ value.phone }}</p>
       </div>
     </div>
     <div class="button-container">
@@ -28,27 +22,26 @@
 </template>
 
 <script>
-import SelectButton from './SelectButton.vue';
+import SelectButton from "./SelectButton.vue";
 
 export default {
-  name: 'HostleItemListCard',
+  name: "HostleItemListCard",
   components: {
     SelectButton,
   },
   props: {
-    elemetn: {
+    value: {
       type: Object,
       required: true,
     },
   },
   methods: {
     selectDormitory() {
-      alert('Гуртожиток обрано!');
+      alert("Гуртожиток обрано!");
     },
   },
 };
 </script>
-
 
 <style scoped>
 .dorm-info {
@@ -56,10 +49,26 @@ export default {
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 1100px;
-  height: 215px;
-  margin: 60px 0px 0px 350px;
-  position: relative; /* Додаємо позиціонування для контейнера */
+  width: 100%; /* Ширина на 100% доступної площі */
+  max-width: 1100px; /* Максимальна ширина */
+  height: auto; /* Автоматична висота, щоб підлаштуватися під контент */
+  position: relative;
+  margin: 20px auto;
+}
+
+@media (max-width: 1024px) {
+  .dorm-info {
+    padding: 20px; /* Зменшуємо паддінги для планшетів */
+    margin: 10px 0px; /* Додаємо відступи для планшетів */
+  }
+}
+
+@media (max-width: 768px) {
+  .dorm-info {
+    padding: 15px; /* Зменшуємо паддінги для мобільних пристроїв */
+    margin: 10px 0px; /* Відступи для мобільних пристроїв */
+    width: 100%; /* Ширина 100% для мобільних */
+  }
 }
 
 .dorm-info h2 {
@@ -80,7 +89,7 @@ export default {
   flex: 1;
   margin: 0;
 }
-.dorm-description{
+.dorm-description {
   max-width: 290px;
 }
 
@@ -94,8 +103,7 @@ export default {
   margin: 0px 0px 25px 0px;
 }
 
-
-.button-container{
+.button-container {
   max-width: 83px;
   position: absolute;
   top: 10px; /* Відстань від верхнього краю */
@@ -112,14 +120,14 @@ export default {
   margin-right: 8px;
   background-size: contain;
   background-repeat: no-repeat;
-} 
+}
 
- .icon-location::before {
-  background-image: url('../assets/icon-location.png')
+.icon-location::before {
+  background-image: url("../assets/icon-location.png");
 }
 
 .icon-phone::before {
-  background-image: url('../assets/icon-phone.png');
+  background-image: url("../assets/icon-phone.png");
 }
 
 .choose-btn {
