@@ -29,7 +29,6 @@ export default {
   padding: 20px;
   background: white;
   border-top: 1px solid #ccc;
-  margin-top: 60px;
   width: 100%; /* Залишаємо футер на всю ширину */
   box-sizing: border-box; /* Враховуємо паддінги */
 }

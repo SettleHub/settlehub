@@ -1,47 +1,80 @@
 <template>
-  <div class="dorm-info">
-    <!-- Виведення title з переданого пропса -->
-    <h2>{{ value.title }}</h2>
+  <div class="dorm-info" v-if="selectedHostel">
+    <h2 class="hostel-title">{{ selectedHostel.title }}</h2>
     <div class="dorm-details">
       <div class="dorm-description">
         <p><strong>Хто проживає в гуртожитку:</strong></p>
-        <p>
-          {{ value.description }}
-        </p>
+        <p>{{ selectedHostel.description }}</p>
       </div>
       <div class="dorm-contact">
         <p><strong>Адреса гуртожитку та контакти:</strong></p>
-        <p><i class="icon-location"></i> {{ value.address }}</p>
-        <p><i class="icon-phone"></i> {{ value.phone }}</p>
+        <p><i class="icon-location"></i> {{ selectedHostel.address }}</p>
+        <p><i class="icon-phone"></i> {{ selectedHostel.phone }}</p>
       </div>
     </div>
     <div class="button-container">
-      <SelectButton @click="selectDormitory" />
+      <SelectButton @click="handleSelection" />
     </div>
+  </div>
+  <div v-else>
+    <p>Гуртожиток не знайдений!</p>
   </div>
 </template>
 
 <script>
-import SelectButton from "./SelectButton.vue";
+import SelectButton from "../components/ButtonSelect.vue";
 
 export default {
-  name: "HostleItemListCard",
+  name: "HostelView",
   components: {
     SelectButton,
   },
   props: {
-    value: {
-      type: Object,
+    id: {
+      type: String,
       required: true,
     },
   },
+  data() {
+    return {
+      hostels: [
+        {
+          title: "Гуртожиток №1",
+          description: "Гуртожиток для студентів...",
+          address: "вул. Бойчука Михайла, 13–6",
+          phone: "+36849168498",
+        },
+        {
+          title: "Гуртожиток №2",
+          description: "Гуртожиток для студентів...",
+          address: "вул. Набережно-Рибальська, 3–5",
+          phone: "+380987654321",
+        },
+      ],
+      selectedHostel: null, // Для зберігання обраного гуртожитка
+    };
+  },
+  watch: {
+    id(newId) {
+      this.updateSelectedHostel(newId);
+    },
+  },
+  created() {
+    this.updateSelectedHostel(this.id); // Оновлюємо при створенні компонента
+  },
   methods: {
-    selectDormitory() {
-      alert("Гуртожиток обрано!");
+    updateSelectedHostel(id) {
+      // Оновлений метод пошуку гуртожитка за id
+      this.selectedHostel = this.hostels.find(hostel => hostel.title.includes(id)) || null;
+    },
+    handleSelection() {
+      this.$emit("select", this.selectedHostel);
     },
   },
 };
 </script>
+
+
 
 <style scoped>
 .dorm-info {
@@ -144,3 +177,4 @@ export default {
   background-color: #4848e5;
 }
 </style>
+
