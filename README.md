@@ -1,24 +1,13 @@
-# esettlement-spa
+# esettltment SPA Client
 
-## Project setup
-```
-npm install
-```
+esettltment is the electronic settlement system for dormitories.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+It's main task is to simplify the process of submitting documents for accommodation in a dormitory by applicants/students.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Build from source with [build instruction](./BUILD.md)
 
-### Lints and fixes files
-```
-npm run lint
-```
+Or use Docker container instead see [docker instruction](./DOCKER.md)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+> [!NOTE]
+> If you developer in project
+> Contact the admin to get permissions to repository secrets
