@@ -14,7 +14,10 @@
           <input v-model="selectedRoom.room" type="number" placeholder="110"/>
           <label>Блок:</label>
           <input v-model="selectedRoom.block" type="text" placeholder="A"/>
-          <button @click="toggleRoomStatus">Змінити блок</button>
+          <!-- <ButtonSelect name="Змінити" @click="selectDormitory" /> -->
+
+
+
         </div>
   
         <h3>Завантаження документів</h3>
@@ -61,8 +64,11 @@
   </template>
   
   <script>
+import ButtonSelect from '@/components/ButtonSelect.vue';
+
   export default {
     name: "DocumentUpload", // Це ім'я компонента
+    components: ButtonSelect,
     data() {
       return {
         selectedRoom: {

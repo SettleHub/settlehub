@@ -7,6 +7,7 @@ o
     <!-- Main content rendered by RouterView -->
     <RouterView />
 
+
     <!-- Footer -->
     <FooterComponent />
   </div>

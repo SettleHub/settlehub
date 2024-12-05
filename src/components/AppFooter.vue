@@ -3,9 +3,9 @@
     <div class="footer-container">
       <div class="logo">KNUTD</div>
       <nav class="navigation-footer">
-        <a href="#" class="nav-link active">Головна</a>
-        <a href="#" class="nav-link">Обрати кімнату</a>
-        <a href="#" class="nav-link">Завантаження документів</a>
+        <router-link to="/" class="nav-link">Головна</router-link>
+        <router-link to="/" class="nav-link">Обрати кімнату</router-link>
+        <router-link to="/upload-document" class="nav-link">Завантаження документів</router-link>
       </nav>
     </div>
     <div class="contact">

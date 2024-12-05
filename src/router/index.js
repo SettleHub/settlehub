@@ -1,18 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HostelView from "../views/HostelView.vue";
-import HomeView from "../views/HomeView.vue";
+// import HomeView from "../views/HomeView.vue";
 import DocumentUploadView from "@/views/DocumentUploadView.vue";
 
 // No need to use Vue.use(VueRouter) in Vue 3, this is for Vue 2
 
 const routes = [
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   component: HomeView,
+  // },
   {
     path: "/",
-    name: "Home",
-    component: HomeView,
-  },
-  {
-    path: "/hostels",
     name: "Hostel",
     component: HostelView,
     props: true,

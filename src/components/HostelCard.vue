@@ -16,18 +16,18 @@
       </div>
     </div>
     <div class="button-container">
-      <SelectButton @click="selectDormitory" />
+      <ButtonSelect @click="selectDormitory" />
     </div>
   </div>
 </template>
 
 <script>
-import SelectButton from "./ButtonSelect.vue";
+import ButtonSelect from "./ButtonSelect.vue";
 
 export default {
   name: "HostleItemListCard",
   components: {
-    SelectButton,
+    ButtonSelect,
   },
   props: {
     value: {

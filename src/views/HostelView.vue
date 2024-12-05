@@ -1,15 +1,15 @@
 <template>
-  <div class="dorm-info" v-if="selectedHostel">
-    <h2 class="hostel-title">{{ selectedHostel.title }}</h2>
+  <div class="dorm-info" v-if="hostels">
+    <h2 class="hostel-title">{{ hostels.title }}</h2>
     <div class="dorm-details">
       <div class="dorm-description">
         <p><strong>Хто проживає в гуртожитку:</strong></p>
-        <p>{{ selectedHostel.description }}</p>
+        <p>{{ hostels.description }}</p>
       </div>
       <div class="dorm-contact">
         <p><strong>Адреса гуртожитку та контакти:</strong></p>
-        <p><i class="icon-location"></i> {{ selectedHostel.address }}</p>
-        <p><i class="icon-phone"></i> {{ selectedHostel.phone }}</p>
+        <p><i class="icon-location"></i> {{ hostels.address }}</p>
+        <p><i class="icon-phone"></i> {{ hostels.phone }}</p>
       </div>
     </div>
     <div class="button-container">
@@ -24,6 +24,7 @@
 <script>
 import SelectButton from "../components/ButtonSelect.vue";
 
+
 export default {
   name: "HostelView",
   components: {
@@ -35,6 +36,7 @@ export default {
       required: true,
     },
   },
+  
   data() {
     return {
       hostels: [
