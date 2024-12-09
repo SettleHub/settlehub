@@ -1,0 +1,62 @@
+//FONTS
+
+// Calibri sans-serif font
+@mixin calibri-regular {
+  font-family: $calibri-regular-family;
+  font-weight: 400;
+}
+
+@mixin calibri-bold {
+  font-family: $calibri-bold-family;
+  font-weight: 700;
+}
+
+// Poppins sans-serif font
+@mixin poppins-regular {
+  font-family: $poppins-regular-family;
+  font-weight: 400;
+}
+
+@mixin poppins-medium {
+  font-family: $poppins-medium-family;
+  font-weight: 500;
+}
+
+@mixin poppins-semibold {
+  font-family: $poppins-semibold-family;
+  font-weight: 600;
+}
+
+@mixin poppins-bold {
+  font-family: $poppins-bold-family;
+  font-weight: 700;
+}
+
+@mixin responsive-font($pc-size, $mob-size, $max-width) {
+  $add-size: $pc-size - $mob-size;
+  $max-width: $max-width - 320;
+  font-size: calc(#{$mob-size + px} + #{$add-size} * ((100vw - 320px) / #{$max-width}));
+}
+
+//IMAGES
+
+@mixin locked-image {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+// SHADOWS
+
+@mixin shadow-light {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+// HYPERLINKS
+
+@mixin link-phone {
+  text-decoration: none;
+}

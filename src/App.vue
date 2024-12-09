@@ -1,45 +1,35 @@
 <template>  
   <div id="app">
-    <HeaderBar />
-    <div class="section-columns">
-      <main class="column">
-       <HostleItemListCard />
-       <HostleItemListCard />
-      <home/>
-      </main>
-    </div>
-  <FooterComponent />
-
+    <main>
+      <HeaderComponent />
+      <DormitoryListComponent />
+      <FooterComponent />
+    </main>
   </div>
 </template>
 
 <script>
-import FooterComponent from './components/Footer-component.vue';
-import HeaderBar from './components/Header-bar.vue';
-import HostleItemListCard from './components/hostel-item-card.vue';
+import HeaderComponent from './components/HeaderComponent.vue';
+import DormitoryListComponent from "@/components/DormitoryListComponent.vue";
+import FooterComponent from './components/FooterComponent.vue';
 
 export default {
   name: 'App',
   components: {
-    HeaderBar,
-    HostleItemListCard,
+    HeaderComponent,
+    DormitoryListComponent,
     FooterComponent
   }
 }
 
 </script>
 
+<style lang="css">
+  /* Something on the way. */
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  background: 484848;
-  width:  1920px ;
-  height: 800px;
-}
-
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
 </style>
