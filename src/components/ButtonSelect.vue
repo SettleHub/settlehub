@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "SelectButton",
+  name: "ButtonSelect",
   props: {
     label: {
       type: String,

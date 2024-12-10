@@ -1,34 +1,17 @@
 <template>
-  <div class="dorm-info" v-if="hostels">
-    <h2 class="hostel-title">{{ hostels.title }}</h2>
-    <div class="dorm-details">
-      <div class="dorm-description">
-        <p><strong>Хто проживає в гуртожитку:</strong></p>
-        <p>{{ hostels.description }}</p>
-      </div>
-      <div class="dorm-contact">
-        <p><strong>Адреса гуртожитку та контакти:</strong></p>
-        <p><i class="icon-location"></i> {{ hostels.address }}</p>
-        <p><i class="icon-phone"></i> {{ hostels.phone }}</p>
-      </div>
-    </div>
-    <div class="button-container">
-      <SelectButton @click="handleSelection" />
-    </div>
-  </div>
-  <div v-else>
-    <p>Гуртожиток не знайдений!</p>
-  </div>
+      <DormitoryListComponent />
+      <ButtonSelect @click="handleSelection" />
 </template>
 
 <script>
-import SelectButton from "../components/ButtonSelect.vue";
-
+import ButtonSelect from "../components/ButtonSelect.vue";
+import DormitoryListComponent from "../components/DormitoryCardComponent.vue"
 
 export default {
   name: "HostelView",
   components: {
-    SelectButton,
+    ButtonSelect,
+    DormitoryListComponent
   },
   props: {
     id: {
@@ -39,21 +22,21 @@ export default {
   
   data() {
     return {
-      hostels: [
-        {
-          title: "Гуртожиток №1",
-          description: "Гуртожиток для студентів...",
-          address: "вул. Бойчука Михайла, 13–6",
-          phone: "+36849168498",
-        },
-        {
-          title: "Гуртожиток №2",
-          description: "Гуртожиток для студентів...",
-          address: "вул. Набережно-Рибальська, 3–5",
-          phone: "+380987654321",
-        },
-      ],
-      selectedHostel: null, // Для зберігання обраного гуртожитка
+      // hostels: [
+      //   {
+      //     title: "Гуртожиток №1",
+      //     description: "Гуртожиток для студентів...",
+      //     address: "вул. Бойчука Михайла, 13–6",
+      //     phone: "+36849168498",
+      //   },
+      //   {
+      //     title: "Гуртожиток №2",
+      //     description: "Гуртожиток для студентів...",
+      //     address: "вул. Набережно-Рибальська, 3–5",
+      //     phone: "+380987654321",
+      //   },
+      // ],
+      // selectedHostel: null, // Для зберігання обраного гуртожитка
     };
   },
   watch: {
@@ -158,11 +141,11 @@ export default {
 }
 
 .icon-location::before {
-  background-image: url("../assets/icon-location.png");
+  background-image: url("../assets/icon-location.svg");
 }
 
 .icon-phone::before {
-  background-image: url("../assets/icon-phone.png");
+  background-image: url("../assets/icon-phone.svg");
 }
 
 .choose-btn {

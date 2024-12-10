@@ -27,17 +27,17 @@
           </div>
         </div>
       </div>
-      <SelectButton :label="Обрати"/>
+      <ButtonSelect :label="Обрати"/>
     </div>
   </div>
 </template>
 
 <script>
-import SelectButton from "@/components/SelectButton.vue";
+import ButtonSelect from "@/components/ButtonSelect.vue";
 
 export default {
   name: "DormitoryCardComponent",
-  components: { SelectButton },
+  components: { ButtonSelect },
   props: {
     dormitory: {
       type: Object,
