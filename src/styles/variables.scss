@@ -1,0 +1,54 @@
+// BACKGROUND COLORS
+$background-white: #FFFFFF;
+$background-gray: #F4F7FE;
+
+// TEXT COLORS
+$text-dark-blue: #2B3674;
+$text-light-gray: #A3AED0;
+$text-white: #FFFFFF;
+
+// CLICKABLE OBJECTS COLORS
+$bright-blue: #4318FF;
+$bright-red: #FF1A63;
+$deep-sky-blue: #17ABEB;
+$light-state-gray: #8086AC;
+
+// FONTS
+
+// Calibri sans-serif font
+@font-face {
+  font-family: Calibri-Regular;
+  src: url("../fonts/calibri-font-family/calibri-regular.ttf");
+}
+$calibri-regular-family: Calibri-Regular, sans-serif;
+
+@font-face {
+  font-family: Calibri-Bold;
+  src: url("../fonts/calibri-font-family/calibri-bold.ttf");
+}
+$calibri-bold-family: Calibri-Bold, sans-serif;
+
+// Poppins sans-serif font
+@font-face {
+  font-family: Poppins-Regular;
+  src: url("../fonts/poppins-font-family/poppins-regular.ttf");
+}
+$poppins-regular-family: Poppins-Regular, sans-serif;
+
+@font-face {
+  font-family: Poppins-Medium;
+  src: url("../fonts/poppins-font-family/poppins-medium.ttf");
+}
+$poppins-medium-family: Poppins-Medium, sans-serif;
+
+@font-face {
+  font-family: Poppins-SemiBold;
+  src: url("../fonts/poppins-font-family/poppins-semibold.ttf");
+}
+$poppins-semibold-family: Poppins-SemiBold, sans-serif;
+
+@font-face {
+  font-family: Poppins-Bold;
+  src: url("../fonts/poppins-font-family/poppins-bold.ttf");
+}
+$poppins-bold-family: Poppins-Bold, sans-serif;

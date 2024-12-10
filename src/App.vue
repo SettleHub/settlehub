@@ -1,41 +1,36 @@
 o
 <template>
   <div id="app">
-    <!-- Header -->
-    <HeaderBar />
-
-    <!-- Main content rendered by RouterView -->
-    <RouterView />
-
-
-    <!-- Footer -->
-    <FooterComponent />
+    <main>
+      <HeaderComponent />
+      <DormitoryListComponent />
+      <FooterComponent />
+    </main>
   </div>
 </template>
 
 <script>
-// import HomeView from "./views/HomeView.vue";
-import HeaderBar from "./components/AppHeader.vue";
-import FooterComponent from "./components/AppFooter.vue";
-// import HostelCard from "./components/HostelCard.vue";
+import HeaderComponent from './components/HeaderComponent.vue';
+import DormitoryListComponent from "@/components/DormitoryListComponent.vue";
+import FooterComponent from './components/FooterComponent.vue';
 
 export default {
   name: "App",
   components: {
-    // HomeView,
-    // HostelCard,
-    HeaderBar,
-    FooterComponent,
-  },
-};
+    HeaderComponent,
+    DormitoryListComponent,
+    FooterComponent
+  }
+}
+
 </script>
 
-<style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<style lang="css">
+  /* Something on the way. */
+
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
 </style>
