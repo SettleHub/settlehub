@@ -1,4 +1,4 @@
-<template>
+  <template>
   <button class="click-button" @click="openFile">
     <span class="button-label">{{ label }}</span>
     <img src="@/assets/file.pdf.icon.svg" alt="icon" class="button-icon" />
@@ -21,27 +21,27 @@ export default {
     
   },
   methods: {
-      /* handleClick() {
-        this.$emit("click"); // Емісія події на головний компонент
-        console.log("button clicked")
-        //let filePath = '/src/assets/logo.picture.png';
+    //    handleClick() {
+    //     this.$emit("click"); // Емісія події на головний компонент
+    //     console.log("button clicked")
+    //     let filePath = '/src/assets/logo.picture.png';
         
-         let downloadLink = document.createElement('a');
-        downloadLink.href = filePath;
-        downloadLink.target = '_blank';
-        downloadLink.download = '';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink); 
+    //      let downloadLink = document.createElement('a');
+    //     downloadLink.href = filePath;
+    //     downloadLink.target = '_blank';
+    //     downloadLink.download = '';
+    //     document.body.appendChild(downloadLink);
+    //     downloadLink.click();
+    //     document.body.removeChild(downloadLink); 
 
-      }, */
-      openFile() {
-      const fileUrl = this.filePath.startsWith("/")
-        ? `${process.env.BASE_URL}${this.filePath}`
-        : this.filePath;
+    //   }, 
+    //   openFile() {
+    //   const fileUrl = this.filePath.startsWith("/")
+    //     ? `${process.env.BASE_URL}${this.filePath}`
+    //     : this.filePath;
       
-      window.open(fileUrl, "_blank");
-    },
+    //   window.open(fileUrl, "_blank");
+    // },
     },
 };
 </script>

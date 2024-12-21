@@ -3,7 +3,7 @@ o
   <div id="app">
     <main>
       <HeaderComponent />
-      <DownloadButton/>
+      <!-- <DownloadButton/> -->
       <DormitoryListComponent />
       <FooterComponent />
     </main>
@@ -14,7 +14,7 @@ o
 import HeaderComponent from './components/HeaderComponent.vue';
 import DormitoryListComponent from "@/components/DormitoryListComponent.vue";
 import FooterComponent from './components/FooterComponent.vue';
-import DownloadButton from './components/DownloadButton.vue';
+// import DownloadButton from './components/DownloadButton.vue';
 
 export default {
   name: "App",
@@ -22,7 +22,7 @@ export default {
     HeaderComponent,
     DormitoryListComponent,
     FooterComponent,
-    DownloadButton
+    // DownloadButton
   }
 }
 
