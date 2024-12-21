@@ -3,6 +3,7 @@ o
   <div id="app">
     <main>
       <HeaderComponent />
+      <DownloadButton/>
       <DormitoryListComponent />
       <FooterComponent />
     </main>
@@ -13,13 +14,15 @@ o
 import HeaderComponent from './components/HeaderComponent.vue';
 import DormitoryListComponent from "@/components/DormitoryListComponent.vue";
 import FooterComponent from './components/FooterComponent.vue';
+import DownloadButton from './components/DownloadButton.vue';
 
 export default {
   name: "App",
   components: {
     HeaderComponent,
     DormitoryListComponent,
-    FooterComponent
+    FooterComponent,
+    DownloadButton
   }
 }
 
