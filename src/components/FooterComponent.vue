@@ -7,10 +7,10 @@
             <img src="../assets/logo.picture.png" alt="KNUTD Logotype" />
           </div>
           <nav class="navigation">
-            <a href="/" class="nav_link">Головна</a>
-            <a href="#" class="nav_link">Обрати кімнату</a>
-            <a href="#" class="nav_link">Завантаження документів</a>
-          </nav>
+        <router-link to="/" class="nav_link">Головна</router-link>
+        <router-link to="/room-select" class="nav_link">Обрати кімнату</router-link>
+        <router-link to="/upload-document" class="nav_link">Завантаження документів</router-link>
+      </nav>
         </div>
         <div class="contacts_block">
           <p class="contacts_title">Контакти</p>

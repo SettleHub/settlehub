@@ -1,17 +1,23 @@
 <template>
+      <HeaderComponent />
       <DormitoryListComponent />
       <ButtonSelect @click="handleSelection" />
+      <FooterComponent />
 </template>
 
 <script>
 import ButtonSelect from "../components/ButtonSelect.vue";
 import DormitoryListComponent from "../components/DormitoryCardComponent.vue"
+import HeaderComponent from "../components/HeaderComponent.vue";
+import FooterComponent from "../components/FooterComponent.vue";
 
 export default {
   name: "HostelView",
   components: {
+    HeaderComponent,
     ButtonSelect,
-    DormitoryListComponent
+    DormitoryListComponent,
+    FooterComponent
   },
   props: {
     id: {
@@ -20,25 +26,7 @@ export default {
     },
   },
   
-  data() {
-    return {
-      // hostels: [
-      //   {
-      //     title: "Гуртожиток №1",
-      //     description: "Гуртожиток для студентів...",
-      //     address: "вул. Бойчука Михайла, 13–6",
-      //     phone: "+36849168498",
-      //   },
-      //   {
-      //     title: "Гуртожиток №2",
-      //     description: "Гуртожиток для студентів...",
-      //     address: "вул. Набережно-Рибальська, 3–5",
-      //     phone: "+380987654321",
-      //   },
-      // ],
-      // selectedHostel: null, // Для зберігання обраного гуртожитка
-    };
-  },
+  
   watch: {
     id(newId) {
       this.updateSelectedHostel(newId);

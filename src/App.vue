@@ -1,25 +1,19 @@
-o
 <template>
   <div id="app">
     <main>
-      <HeaderComponent />
-      <DormitoryListComponent />
-      <FooterComponent />
+      <HostelView />
     </main>
   </div>
 </template>
 
 <script>
-import HeaderComponent from './components/HeaderComponent.vue';
-import DormitoryListComponent from "@/components/DormitoryListComponent.vue";
-import FooterComponent from './components/FooterComponent.vue';
+
+import HostelView from "@/views/HostelView.vue";
 
 export default {
   name: "App",
   components: {
-    HeaderComponent,
-    DormitoryListComponent,
-    FooterComponent
+    HostelView
   }
 }
 
