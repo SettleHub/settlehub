@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <main>
-      <HostelView />
+    <HeaderComponent />
+      <HostelView :hostels="hostelsData" />
+      <RouterView />
+    <FooterComponent />
+
     </main>
   </div>
 </template>
@@ -9,11 +13,14 @@
 <script>
 
 import HostelView from "@/views/HostelView.vue";
-
+import HeaderComponent from "@/components/HeaderComponent.vue";
+import FooterComponent from "@/components/FooterComponent.vue";
 export default {
   name: "App",
   components: {
-    HostelView
+    HostelView,
+    FooterComponent,
+    HeaderComponent,
   }
 }
 

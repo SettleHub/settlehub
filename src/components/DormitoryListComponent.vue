@@ -24,6 +24,7 @@
         dormitories,
       };
     },
+    
   };
 </script>
 

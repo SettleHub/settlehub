@@ -1,53 +1,55 @@
 <template>
-      <HeaderComponent />
-      <DormitoryListComponent />
-      <ButtonSelect @click="handleSelection" />
-      <FooterComponent />
+  <div>
+    <!-- Перевірка наявності даних перед відображенням -->
+    <div v-if="hostels && hostels.length > 0">
+      <div v-for="hostel in hostels" :key="hostel.id">
+        <DormitoryListComponent :dormitory="hostel" />
+      </div>
+    </div>
+    <!-- Якщо дані ще не завантажились -->
+
+  </div>
 </template>
 
 <script>
-import ButtonSelect from "../components/ButtonSelect.vue";
-import DormitoryListComponent from "../components/DormitoryCardComponent.vue"
-import HeaderComponent from "../components/HeaderComponent.vue";
-import FooterComponent from "../components/FooterComponent.vue";
+import { ref, onMounted } from 'vue';
+import DormitoryListComponent from "@/components/DormitoryListComponent.vue";
+import axios from 'axios'; // або ваш спосіб отримання даних (fetch, etc.)
 
 export default {
-  name: "HostelView",
+  name: "HostelViewComponent",
   components: {
-    HeaderComponent,
-    ButtonSelect,
     DormitoryListComponent,
-    FooterComponent
   },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  
-  
-  watch: {
-    id(newId) {
-      this.updateSelectedHostel(newId);
-    },
-  },
-  created() {
-    this.updateSelectedHostel(this.id); // Оновлюємо при створенні компонента
-  },
-  methods: {
-    updateSelectedHostel(id) {
-      // Оновлений метод пошуку гуртожитка за id
-      this.selectedHostel = this.hostels.find(hostel => hostel.title.includes(id)) || null;
-    },
-    handleSelection() {
-      this.$emit("select", this.selectedHostel);
-    },
+  setup() {
+    // Ініціалізація змінної для даних гуртожитків
+    const hostels = ref([]); // Початкове значення - порожній масив
+
+    // Завантаження даних за допомогою axios або іншого методу
+    const loadHostels = async () => {
+      try {
+        const response = await axios.get('/api/hostels'); // Замість '/api/hostels' використовуйте правильний URL
+        if (response.data && Array.isArray(response.data)) {
+          hostels.value = response.data; // Записуємо отримані дані у змінну
+        } else {
+          console.error("Дані гуртожитків не є масивом", response.data);
+        }
+      } catch (error) {
+        console.error('Помилка завантаження гуртожитків:', error);
+      }
+    };
+
+    // Виклик функції завантаження даних після монтування компонента
+    onMounted(() => {
+      loadHostels();
+    });
+
+    return {
+      hostels,
+    };
   },
 };
 </script>
-
-
 
 <style scoped>
 .dorm-info {
@@ -150,4 +152,3 @@ export default {
   background-color: #4848e5;
 }
 </style>
-
