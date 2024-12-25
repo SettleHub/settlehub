@@ -24,7 +24,7 @@
         <form @submit.prevent="submitForm">
           <div class="form-group">
             <label for="application">Заповніть та завантажте сам заяву</label>
-            <input type="file" id="application" @change="handleFileChange" />
+            <DownloadButton label="Заява" />
           </div>
   
           <div class="form-group">
@@ -64,11 +64,15 @@
   </template>
   
   <script>
-import ButtonSelect from '@/components/ButtonSelect.vue';
+// import ButtonSelect from '@/components/ButtonSelect.vue';
+import DownloadButton from '@/components/DownloadButton.vue';
 
   export default {
     name: "DocumentUpload", // Це ім'я компонента
-    components: ButtonSelect,
+    components: {
+      // ButtonSelect, 
+      DownloadButton
+    },
     data() {
       return {
         selectedRoom: {
