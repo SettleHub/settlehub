@@ -1,146 +1,136 @@
 <template>
-  <div class="dorm-info">
-    <!-- Виведення title з переданого пропса -->
-    <h2>{{ value.title }}</h2>
-    <div class="dorm-details">
-      <div class="dorm-description">
-        <p><strong>Хто проживає в гуртожитку:</strong></p>
-        <p>
-          {{ value.description }}
-        </p>
+  <div class="card">
+    <div class="card_wrapper">
+      <div class="information_block">
+        <h3 class="title">{{ hostel.title }}</h3>
+        <div class="description_and_contacts_block">
+          <div class="description_block">
+            <h4 class="description_title">Хто проживає в гуртожитку:</h4>
+            <p class="description_text">{{ hostel.description }}</p>
+          </div>
+          <div class="contacts_block">
+            <h4 class="contacts_title">Адреса гуртожитку та контакти:</h4>
+            <div class="contacts_list">
+              <div class="contact_wrapper">
+                <a class="link-hostel_contact" :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hostel.address)}`">
+                  <img src="../assets/location.icon.svg" alt="Location" />
+                  <p>{{ hostel.address }}</p>
+                </a>
+              </div>
+              <div class="contact_wrapper">
+                <a class="link-hostel_contact" :href="`tel: ${encodeURIComponent(hostel.phone)}`">
+                  <img src="../assets/phone.icon.svg" alt="Phone" />
+                  <p>{{ hostel.phone }}</p>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="dorm-contact">
-        <p><strong>Адреса гуртожитку та контакти:</strong></p>
-        <p><i class="icon-location"></i> {{ value.address }}</p>
-        <p><i class="icon-phone"></i> {{ value.phone }}</p>
-      </div>
-    </div>
-    <div class="button-container">
-      <ButtonSelect @click="selectDormitory" />
+      <ButtonSelect :isLink=true :route="`/hostel/${hostel.number}`" />
     </div>
   </div>
 </template>
 
 <script>
-import ButtonSelect from "./ButtonSelect.vue";
+import ButtonSelect from "@/components/ButtonSelect.vue";
 
 export default {
-  name: "HostleItemListCard",
-  components: {
-    ButtonSelect,
-  },
+  name: "HostelCardComponent",
+  components: { ButtonSelect },
   props: {
-    value: {
+    hostel: {
       type: Object,
       required: true,
-    },
-  },
-  methods: {
-    selectDormitory() {
-      alert("Гуртожиток обрано!");
     },
   },
 };
 </script>
 
-<style scoped>
-.dorm-info {
-  background-color: #f9fbff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 100%; /* Ширина на 100% доступної площі */
-  max-width: 1100px; /* Максимальна ширина */
-  height: auto; /* Автоматична висота, щоб підлаштуватися під контент */
-  position: relative;
-  margin: 20px auto;
+<style lang="scss" scoped>
+.card {
+  background: transparent;
 }
 
-@media (max-width: 1024px) {
-  .dorm-info {
-    padding: 20px; /* Зменшуємо паддінги для планшетів */
-    margin: 10px 0px; /* Додаємо відступи для планшетів */
-  }
-}
-
-@media (max-width: 768px) {
-  .dorm-info {
-    padding: 15px; /* Зменшуємо паддінги для мобільних пристроїв */
-    margin: 10px 0px; /* Відступи для мобільних пристроїв */
-    width: 100%; /* Ширина 100% для мобільних */
-  }
-}
-
-.dorm-info h2 {
-  color: #323a56;
-  margin-bottom: 20px;
+.card_wrapper {
   display: flex;
-  justify-content: row;
-}
-
-.dorm-details {
-  display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  gap: 20px;
 }
 
-.dorm-description,
-.dorm-contact {
-  flex: 1;
-  margin: 0;
-}
-.dorm-description {
-  max-width: 290px;
-}
-
-.dorm-description p,
-.dorm-contact p {
-  color: #555;
-  margin: 0; /* Убираем внешние отступы у параграфов */
-  padding: 0; /* Убираем внутренние отступы у параграфов */
-  display: block; /* Убедимся, что каждый параграф на новой строке */
-  text-align: left; /* Прижимаем текст к левой стороне */
-  margin: 0px 0px 25px 0px;
+.information_block {
+  display: flex;
+  flex-direction: column;
+  .title {
+    @include poppins-bold;
+    @include responsive-font(24, 20, 1440);
+    color: $text-dark-blue;
+    text-align: start;
+  }
 }
 
-.button-container {
-  max-width: 83px;
-  position: absolute;
-  top: 10px; /* Відстань від верхнього краю */
-  right: 10px; /* Відстань від правого краю */
-  padding: 20px 50px 0px 0px;
-}
 
-.icon-location::before,
-.icon-phone::before {
-  content: "";
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
+.description_and_contacts_block {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 69px;
 
-.icon-location::before {
-  background-image: url("../assets/icon-location.png");
-}
+  .description_block {
+    max-width: 241px;
 
-.icon-phone::before {
-  background-image: url("../assets/icon-phone.png");
-}
+    .description_title {
+      @include poppins-bold;
+      @include responsive-font(16, 14, 1440);
+      color: $text-dark-blue;
+      text-align: start;
+    }
+    .description_text {
+      margin-top: 18px;
+      @include poppins-regular;
+      @include responsive-font(13, 12, 1440);
+      color: $text-light-gray;
+      text-align: start;
+    }
+  }
 
-.choose-btn {
-  background-color: #5a5eff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-}
+  .contacts_block {
+    max-width: 265px;
 
-.choose-btn:hover {
-  background-color: #4848e5;
+    .contacts_title {
+      @include poppins-bold;
+      @include responsive-font(16, 14, 1440);
+      color: $text-dark-blue;
+      text-align: start;
+    }
+
+    .contacts_list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 18px;
+
+      .contact_wrapper {
+        .link-hostel_contact {
+          text-decoration: none;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          img {
+            @include locked-image;
+            margin-right: 13px;
+          }
+          p {
+            @include poppins-medium;
+            @include responsive-font(13, 12, 1440);
+            color: $text-light-gray;
+            text-align: start;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
+  
