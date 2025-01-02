@@ -1,21 +1,15 @@
 <template>
   <div>
-    <!-- Перевірка наявності даних перед відображенням -->
     <div v-if="hostelsDescription && hostelsDescription.length > 0">
       <HostelListComponent :hostels="hostelsDescription" />
     </div>
-    <!-- Якщо дані ще не завантажились -->
-<<<<<<< HEAD:src/views/HostelView.vue
-<!-- Need to be finish -->
-=======
->>>>>>> c3920e959e2d91bc4c6675b41f506198f62b8a20:src/views/HostelsListView.vue
   </div>
 </template>
 
 <script>
 import {ref, onMounted} from 'vue';
 import HostelListComponent from "@/components/HostelList.vue";
-import axios from 'axios'; // або ваш спосіб отримання даних (fetch, etc.)
+import axios from 'axios'; 
 
 export default {
   name: "HostelsListViewComponent",
@@ -23,15 +17,13 @@ export default {
     HostelListComponent,
   },
   setup() {
-    // Ініціалізація змінної для даних гуртожитків
-    const hostelsDescription = ref([]); // Початкове значення - порожній масив
+    const hostelsDescription = ref([]); 
 
-    // Завантаження даних за допомогою axios або іншого методу
     const loadHostelsDescription = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8081/api/hostels'); // Замість '/api/hostels' використовуйте правильний URL
+        const response = await axios.get('http://127.0.0.1:8081/api/hostels'); 
         if (response.data && Array.isArray(response.data)) {
-          hostelsDescription.value = response.data; // Записуємо отримані дані у змінну
+          hostelsDescription.value = response.data;
         } else {
           console.error("Дані гуртожитків не є масивом", response.data);
         }
@@ -40,7 +32,7 @@ export default {
       }
     };
 
-    // Виклик функції завантаження даних після монтування компонента
+   
     onMounted(() => {
       loadHostelsDescription();
     });
