@@ -7,7 +7,7 @@
       </div>
     </div>
     <!-- Якщо дані ще не завантажились -->
-
+<!-- Need to be finish -->
   </div>
 </template>
 
