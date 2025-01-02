@@ -1,8 +1,27 @@
 <template>
-  <button class="select-button" @click="handleClick">
-    {{ label }}
-  </button>
+  <div>
+    <router-link v-if="isLink" :to="route">
+      <button
+          :class="`select-button ${isActive ? 'active' : ''}`"
+          :style="buttonStyle"
+          @click="handleClick"
+      >
+        {{ label }}
+      </button>
+    </router-link>
+
+    <button
+        v-else
+        :class="`select-button ${isActive ? 'active' : ''}`"
+        :style="buttonStyle"
+        @click="handleClick"
+    >
+      {{ label }}
+    </button>
+  </div>
 </template>
+
+
 
 <script>
 export default {
@@ -12,33 +31,50 @@ export default {
       type: String,
       default: "Обрати",
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    paddingV: {
+      type: Number,
+      default: 10,
+    },
+    paddingH: {
+      type: Number,
+      default: 40,
+    },
+    isLink: {
+      type: Boolean,
+      default: false,
+    },
+    route: {
+      type: String,
+      default: "",
+    }
+  },
+  computed: {
+    buttonStyle() {
+      return {
+        padding: `${this.paddingV}px ${this.paddingH}px`,
+      };
+    },
   },
   methods: {
     handleClick() {
-      this.$emit("click"); // Емісія події на головний компонент
+      this.$emit("click");
     },
   },
 };
 </script>
 
-<style scoped>
-.select-button {
-  background-color: #4a00e0;
-  color: white;
-  padding: 10px 40px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.select-button:hover {
-  background-color: #3b00b3;
-}
-</style>
 <style lang="scss" scoped>
   .select-button {
-    background-color: $bright-blue;
-    color: $text-white;
+    background-color: $background-white;
+    color: $text-dark-blue;
+    &.active {
+      background-color: $bright-blue;
+      color: $text-white;
+    }
     @include poppins-semibold;
     @include responsive-font(16, 16, 1440);
     padding: 10px 40px;
@@ -48,4 +84,5 @@ export default {
     border-radius: 4px;
     cursor: pointer;
   }
+
 </style>
