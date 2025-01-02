@@ -17,13 +17,15 @@ export default {
     HostelListComponent,
   },
   setup() {
-    const hostelsDescription = ref([]); 
+    // Ініціалізація змінної для даних гуртожитків
+    const hostelsDescription = ref([]); // Початкове значення - порожній масив
 
+    // Завантаження даних за допомогою axios або іншого методу
     const loadHostelsDescription = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8081/api/hostels'); 
+        const response = await axios.get('http://127.0.0.1:8081/api/hostels'); // Замість '/api/hostels' використовуйте правильний URL
         if (response.data && Array.isArray(response.data)) {
-          hostelsDescription.value = response.data;
+          hostelsDescription.value = response.data; // Записуємо отримані дані у змінну
         } else {
           console.error("Дані гуртожитків не є масивом", response.data);
         }
