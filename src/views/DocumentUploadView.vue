@@ -1,169 +1,348 @@
 <template>
-    <div class="knutd-container">
-      <div class="header">
-        <h1>KNUTD</h1>
-      </div>
-      <div class="form-section">
-        <h2>Обраний гуртожиток та кімната:</h2>
-        <div class="room-selection">
-          <label>Гуртожиток:</label>
-          <input v-model="selectedRoom.hostel" type="number" placeholder="№"/>
-          <label>Поверх:</label>
-          <input v-model="selectedRoom.floor" type="number" placeholder="1"/>
-          <label>Кімната:</label>
-          <input v-model="selectedRoom.room" type="number" placeholder="110"/>
-          <label>Блок:</label>
-          <input v-model="selectedRoom.block" type="text" placeholder="A"/>
-          <!-- <ButtonSelect name="Змінити" @click="selectDormitory" /> -->
-
-
-
+  <div class="form-container">
+    <!-- Перша частина контейнера -->
+    <div class="section-one">
+      <div class="room-section">
+        <div class="header">
+          <h3>Обраний гуртожиток та кімната:</h3>
+          <button class="change-button">Змінити</button>
         </div>
-  
-        <h3>Завантаження документів</h3>
-        <form @submit.prevent="submitForm">
-          <div class="form-group">
-            <label for="application">Заповніть та завантажте сам заяву</label>
-            <DownloadButton label="Заява" />
+
+        <div class="room-info">
+          <div class="room-detail">
+            <span class="label">Гуртожиток:</span>
+            <span class="value">№7</span>
           </div>
-  
-          <div class="form-group">
-            <label for="passport">Завантажити скан паспорту</label>
-            <input type="file" id="passport" @change="handleFileChange" />
+          <div class="room-detail">
+            <span class="label">Поверх:</span>
+            <span class="value">1</span>
           </div>
-  
-          <div class="form-group">
-            <label for="infoCard">Завантажити скан інфо-карти студента</label>
-            <input type="file" id="infoCard" @change="handleFileChange" />
+          <div class="room-detail">
+            <span class="label">Клітка:</span>
+            <span class="value">2</span>
           </div>
-  
-          <div class="form-group">
-            <label for="photo">Завантажити фото</label>
-            <input type="file" id="photo" @change="handleFileChange" />
+          <div class="room-detail">
+            <span class="label">Блок:</span>
+            <span class="value">110</span>
+            <div class="block-info">
+          <span class="block">Жіночий блок</span>
+        </div>
           </div>
-  
-          <div class="form-group">
-            <label>Вкажіть вашу стать:</label>
-            <div>
+          <div class="room-detail">
+            <span class="label">Кімната:</span>
+            <span class="value">A</span>
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+
+    <!-- Відступ між секціями -->
+    <div class="space"></div>
+
+    <!-- Друга частина контейнера -->
+    <div class="section-two">
+      <h3 class="upload-header">Завантаження документів</h3>
+      <div class="upload-section">
+        <!-- Перша колонка -->
+        <div class="column">
+          <label class="action-title">1. Заповніть та завантажте скан заяви</label>
+          <DownloadButton :style="{ width: '602px' }" />
+
+          <div class="upload-item">
+            <div class="upload-block">
+              <img src="../assets/Frame.svg" alt="icon" />
+              <p>Виберіть файл, завантажений з комп'ютера</p>
+              <button class="file-button">
+                <img src="../assets/add.icon.svg" alt="icon" />
+                Завантажити заповнену заяву
+              </button>
+            </div>
+          </div>
+
+          <label class="action-title">2. Завантажити скан паспорту</label>
+          <div class="upload-item">
+            <div class="upload-block">
+              <img src="../assets/Frame.svg" alt="icon" />
+              <p>Виберіть файл, завантажений з комп'ютера</p>
+              <button class="file-button">
+                <img src="../assets/add.icon.svg" alt="icon" />
+                Завантажити скан
+              </button>
+            </div>
+          </div>
+
+          <label class="action-title">3. Завантажити скан ідентифікаційного коду</label>
+          <div class="upload-item">
+            <div class="upload-block">
+              <img src="../assets/Frame.svg" alt="icon" />
+              <p>Виберіть файл, завантажений з комп'ютера</p>
+              <button class="file-button">
+                <img src="../assets/add.icon.svg" alt="icon" />
+                Завантажити скан
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Друга колонка (розширена) -->
+        <div class="column expanded-column">
+          <label class="action-title">4. Завантажити фото</label>
+          <div class="upload-item">
+            <div class="upload-block">
+              <img src="../assets/PhotoDoc.svg" alt="icon" />
+              <p>Виберіть файл, завантажений з комп'ютера</p>
+              <button class="file-button">
+                <img src="../assets/add.icon.svg" alt="icon" />
+                Завантажити фото
+              </button>
+            </div>
+          </div>
+
+          <label class="action-title">5. Вкажіть вашу стать</label>
+          <div class="upload-item">
+            <div class="gender-select">
               <label>
-                <input type="radio" v-model="gender" value="female" />
-                Жіноча
+                <input type="radio" value="Дівчина" v-model="gender" />
+                Дівчина
               </label>
               <label>
-                <input type="radio" v-model="gender" value="male" />
-                Чоловіча
+                <input type="radio" value="Хлопець" v-model="gender" />
+                Хлопець
               </label>
             </div>
           </div>
-  
-          <button type="submit">Відправити</button>
-        </form>
+
+          <!-- Контактні дані -->
+          <label class="action-title">Контактні дані</label>
+          <div class="upload-item contact-info">
+            <input type="tel" placeholder="Введіть номер телефону" class="contact-field" />
+            <input type="email" placeholder="Введіть вашу пошту" class="contact-field" />
+          </div>
+        </div>
       </div>
 
+      <!-- Кнопка відправити -->
+      <button class="submit-button">Відправити</button>
     </div>
-  </template>
-  
-  <script>
-// import ButtonSelect from '@/components/ButtonSelect.vue';
+  </div>
+</template>
+
+<script>
 import DownloadButton from '@/components/DownloadButton.vue';
 
-  export default {
-    name: "DocumentUpload", // Це ім'я компонента
-    components: {
-      // ButtonSelect, 
-      DownloadButton
-    },
-    data() {
-      return {
-        selectedRoom: {
-          hostel: '',
-          floor: '',
-          room: '',
-          block: ''
-        },
-        gender: '',
-      };
-    },
-    methods: {
-      handleFileChange(event) {
-        console.log("Файл вибрано: ", event.target.files[0]);
-      },
-      submitForm() {
-        // Логіка для обробки форми
-        console.log("Форма відправлена");
-      },
-      toggleRoomStatus() {
-        // Логіка для зміни блоку
-        console.log("Блок змінено");
-      }
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .knutd-container {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fc;
-    padding: 20px;
-    border-radius: 8px;
-    width: 60%;
-    margin: 0 auto;
-  }
-  
-  .header h1 {
-    text-align: center;
-    color: #003366;
-  }
-  
-  .room-selection {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  
-  .room-selection input {
-    margin: 5px 0;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group input[type="file"] {
-    padding: 10px;
-    font-size: 14px;
-  }
-  
-  footer {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  footer p {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  footer div {
-    font-size: 14px;
-  }
-  </style>
-  
+export default {
+  components: {
+    DownloadButton,
+  },
+  data() {
+    return {
+      gender: "",
+    };
+  },
+};
+</script>
+
+<style scoped>
+/* Main container styling */
+.form-container {
+  max-width: 1275px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  border-radius: 10px;
+}
+
+/* Розділ гуртожитку та кімнати */
+.room-section {
+  background-color: white;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 1px 20px 30px 20px ;
+
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.change-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Room info */
+.room-info {
+  display: flex;
+  gap: 20px;
+}
+
+.room-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.label {
+  color: #A3AED0 ;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.value {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 18px;
+  width: 80%;
+  text-align: center;
+}
+
+/* Block info */
+.block-info {
+  margin-top: 10px;
+}
+
+.block {
+  background: #ffcccb;
+  color: #d9534f;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+
+/* Друга частина контейнера */
+.section-two {
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 1px 20px 30px 20px ;
+}
+
+
+/* Заголовок завантаження документів */
+.upload-header {
+  margin-bottom: 10px;
+}
+
+/* Upload section */
+.upload-section {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.expanded-column {
+  flex: 1.5;
+}
+
+.action-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.upload-item {
+  height: 141px;
+  width: 601px; /* Make sure they take the full width of the container */
+   /* You can adjust this to your desired width */
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* This will center the items horizontally */
+}
+
+.upload-block {
+  text-align: center;
+}
+
+.upload-block img {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 5px;
+}
+
+.upload-block p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.file-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-button img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Gender selection */
+.gender-select {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Contact info */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-field {
+  margin-top: 5px;
+  padding: 8px;
+  width: 520px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.submit-button {
+  background: #4318FF;
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.submit-button:hover {
+  background: #3913e4;
+}
+</style>
