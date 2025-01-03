@@ -54,10 +54,7 @@
             <div class="upload-block">
               <img src="../assets/Frame.svg" alt="icon" />
               <p>Виберіть файл, завантажений з комп'ютера</p>
-              <button class="file-button">
-                <img src="../assets/add.icon.svg" alt="icon" />
-                Завантажити заповнену заяву
-              </button>
+                <FileUploader label="Завантажити заповнену заяву"   />
             </div>
           </div>
 
@@ -66,10 +63,7 @@
             <div class="upload-block">
               <img src="../assets/Frame.svg" alt="icon" />
               <p>Виберіть файл, завантажений з комп'ютера</p>
-              <button class="file-button">
-                <img src="../assets/add.icon.svg" alt="icon" />
-                Завантажити скан
-              </button>
+              <FileUploader label="Завантажити скан"   />
             </div>
           </div>
 
@@ -78,10 +72,7 @@
             <div class="upload-block">
               <img src="../assets/Frame.svg" alt="icon" />
               <p>Виберіть файл, завантажений з комп'ютера</p>
-              <button class="file-button">
-                <img src="../assets/add.icon.svg" alt="icon" />
-                Завантажити скан
-              </button>
+              <FileUploader label="Завантажити скан"   />
             </div>
           </div>
         </div>
@@ -93,10 +84,7 @@
             <div class="upload-block">
               <img src="../assets/PhotoDoc.svg" alt="icon" />
               <p>Виберіть файл, завантажений з комп'ютера</p>
-              <button class="file-button">
-                <img src="../assets/add.icon.svg" alt="icon" />
-                Завантажити фото
-              </button>
+              <FileUploader label="Завантажити фото"   />
             </div>
           </div>
 
@@ -113,9 +101,9 @@
               </label>
             </div>
           </div>
-
+          
           <!-- Контактні дані -->
-          <label class="action-title">Контактні дані</label>
+          <label class="action-title">6. Контактні дані</label>
           <div class="upload-item contact-info">
             <input type="tel" placeholder="Введіть номер телефону" class="contact-field" />
             <input type="email" placeholder="Введіть вашу пошту" class="contact-field" />
@@ -131,10 +119,11 @@
 
 <script>
 import DownloadButton from '@/components/DownloadButton.vue';
-
+import FileUploader from '../components/FileUploader.vue'
 export default {
   components: {
     DownloadButton,
+    FileUploader
   },
   data() {
     return {
