@@ -23,7 +23,7 @@ export default {
     // Завантаження даних за допомогою axios або іншого методу
     const loadHostelsDescription = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8081/api/hostels'); // Замість '/api/hostels' використовуйте правильний URL
+        const response = await axios.get('http://192.168.197.153:8081/api/hostels'); // Замість '/api/hostels' використовуйте правильний URL
         if (response.data && Array.isArray(response.data)) {
           hostelsDescription.value = response.data; // Записуємо отримані дані у змінну
         } else {

@@ -5,7 +5,9 @@
       <div class="room-section">
         <div class="header">
           <h3>Обраний гуртожиток та кімната:</h3>
-          <button class="change-button">Змінити</button>
+          <router-link to="/hostels"><ButtonSelect :label="'Змінити'"/></router-link>
+          
+     
         </div>
 
         <div class="room-info">
@@ -120,14 +122,19 @@
 <script>
 import DownloadButton from '@/components/DownloadButton.vue';
 import FileUploader from '../components/FileUploader.vue'
+import ButtonSelect from '@/components/ButtonSelect.vue';
 export default {
   components: {
     DownloadButton,
-    FileUploader
+    FileUploader,
+    ButtonSelect
   },
   data() {
     return {
-      gender: "",
+      gender: {
+        Type: String,
+        default: null,
+      }
     };
   },
 };

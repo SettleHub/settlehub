@@ -41,7 +41,7 @@ export default {
     },
     label: {
       type: String,
-      default: "Завантажити фото",
+      default: "noname",
     },
     isActive: {
       type: Boolean,
