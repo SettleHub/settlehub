@@ -8,8 +8,8 @@
         </div>
   
         <nav class="navigation">
-        <router-link to="/" class="nav_link ">Головна</router-link>
-        <router-link to="/hostels" class="nav_link">Обрати кімнату</router-link>
+          <router-link to="/" class="nav_link">Головна</router-link>
+        <router-link to="/room-select" class="nav_link">Обрати кімнату</router-link>
         <router-link to="/upload-document" class="nav_link">Завантаження документів</router-link>
       </nav>
       </div>
