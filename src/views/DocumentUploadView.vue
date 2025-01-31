@@ -1,13 +1,10 @@
 <template>
   <div class="form-container">
-    <!-- Перша частина контейнера -->
     <div class="section-one">
       <div class="room-section">
         <div class="header">
           <h3>Обраний гуртожиток та кімната:</h3>
           <router-link to="/hostels"><ButtonSelect :label="'Змінити'"/></router-link>
-          
-     
         </div>
 
         <div class="room-info">
