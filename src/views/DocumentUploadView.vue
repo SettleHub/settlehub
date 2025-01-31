@@ -1,13 +1,10 @@
 <template>
   <div class="form-container">
-    <!-- Перша частина контейнера -->
     <div class="section-one">
       <div class="room-section">
         <div class="header">
           <h3>Обраний гуртожиток та кімната:</h3>
           <router-link to="/hostels"><ButtonSelect :label="'Змінити'"/></router-link>
-          
-     
         </div>
 
         <div class="room-info">
@@ -35,19 +32,13 @@
             <span class="value">A</span>
           </div>
         </div>
-
-        
       </div>
     </div>
 
-    <!-- Відступ між секціями -->
     <div class="space"></div>
-
-    <!-- Друга частина контейнера -->
     <div class="section-two">
       <h3 class="upload-header">Завантаження документів</h3>
       <div class="upload-section">
-        <!-- Перша колонка -->
         <div class="column">
           <label class="action-title">1. Заповніть та завантажте скан заяви</label>
           <DownloadButton :style="{ width: '602px' }" />
@@ -79,7 +70,6 @@
           </div>
         </div>
 
-        <!-- Друга колонка (розширена) -->
         <div class="column expanded-column">
           <label class="action-title">4. Завантажити фото</label>
           <div class="upload-item">
@@ -93,18 +83,16 @@
           <label class="action-title">5. Вкажіть вашу стать</label>
           <div class="upload-item">
             <div class="gender-select">
-              <label>
-                <input type="radio" value="Дівчина" v-model="gender" />
-                Дівчина
-              </label>
-              <label>
-                <input type="radio" value="Хлопець" v-model="gender" />
-                Хлопець
-              </label>
+              
+                <input id="radioButton1" type="radio" value="Дівчина" v-model="gender" />
+                
+                <label for="radioButton1">Дівчина</label>
+            
+                <input id="radioButton2"  type="radio" value="Хлопець" v-model="gender" />
+                <label for="radioButton2">Хлопець</label>
             </div>
           </div>
           
-          <!-- Контактні дані -->
           <label class="action-title">6. Контактні дані</label>
           <div class="upload-item contact-info">
             <input type="tel" placeholder="Введіть номер телефону" class="contact-field" />
@@ -113,7 +101,6 @@
         </div>
       </div>
 
-      <!-- Кнопка відправити -->
       <button class="submit-button">Відправити</button>
     </div>
   </div>
@@ -141,7 +128,6 @@ export default {
 </script>
 
 <style scoped>
-/* Main container styling */
 .form-container {
   max-width: 1275px;
   margin: 0 auto;
@@ -150,7 +136,6 @@ export default {
   border-radius: 10px;
 }
 
-/* Розділ гуртожитку та кімнати */
 .room-section {
   background-color: white;
   margin-top: 20px;
@@ -177,7 +162,6 @@ export default {
   font-size: 14px;
 }
 
-/* Room info */
 .room-info {
   display: flex;
   gap: 20px;
@@ -204,7 +188,6 @@ export default {
   text-align: center;
 }
 
-/* Block info */
 .block-info {
   margin-top: 10px;
 }
@@ -218,7 +201,6 @@ export default {
 }
 
 
-/* Друга частина контейнера */
 .section-two {
   margin-top: 20px;
   background-color: white;
@@ -227,12 +209,10 @@ export default {
 }
 
 
-/* Заголовок завантаження документів */
 .upload-header {
   margin-bottom: 10px;
 }
 
-/* Upload section */
 .upload-section {
   display: flex;
   gap: 20px;
@@ -258,14 +238,13 @@ export default {
 
 .upload-item {
   height: 141px;
-  width: 601px; /* Make sure they take the full width of the container */
-   /* You can adjust this to your desired width */
+  width: 601px; 
   border: 2px dashed #ddd;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto; /* This will center the items horizontally */
+  margin: 0 auto;
 }
 
 .upload-block {
@@ -301,7 +280,6 @@ export default {
   height: 20px;
 }
 
-/* Gender selection */
 .gender-select {
   display: flex;
   gap: 20px;
@@ -309,7 +287,71 @@ export default {
   justify-content: center;
 }
 
-/* Contact info */
+
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+
+  border: 2px solid #999;
+  transition: 0.2s all linear;
+  outline: none;
+  margin-right: 5px;
+
+  position: relative;
+}
+
+
+input[type="radio"] {
+  display: none;
+}
+
+
+input[type="radio"] + label {
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+}
+
+input[type="radio"] + label::before {
+  content: "";
+  position: absolute;
+  left: 2.9px;
+  top: 48%;
+  transform: translateY(-45%);
+  width: 10px;
+  height: 10px;
+  border: 2px solid #ccc;
+  border-radius: 50%; 
+  background: #fff;
+  transition: 0.3s;
+}
+#radioButton1:checked + label::before {
+  border-color: #FF1A63;
+  background: #FF1A63;
+}
+
+#radioButton2:checked + label::before {
+  border-color: #0E28B7;
+  background: #0E28B7;
+}
+
+#radioButton1:checked + label {
+  color: #FF1A63;
+  
+}
+
+#radioButton2:checked + label {
+  color: #0E28B7;
+}
+
+
 .contact-info {
   display: flex;
   flex-direction: column;
