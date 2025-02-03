@@ -62,7 +62,7 @@
 <div class="error_page">
   <div class="message_block">
   <p>Sorry, but the service is unavailable</p>
-    <span>Please, come back later or reload page</span>
+    <span>Please, come back later</span>
       </div>  
     </div>
     </div>
