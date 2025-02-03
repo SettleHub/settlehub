@@ -1,9 +1,20 @@
 <template>
-  <div>
+    <div>
     <div v-if="hostelsDescription && hostelsDescription.length > 0">
       <HostelListComponent :hostels="hostelsDescription" />
     </div>
+    <div v-else>
+    <div class="error_block">
+      <div class="error_page">
+        <div class="message_block">
+        <p>Sorry, but the service is unavailable</p>
+         <span>Please, come back later or reload page</span>
+        </div>  
+      </div>
+    </div>  
   </div>
+</div>
+
 </template>
 
 <script>
@@ -17,15 +28,12 @@ export default {
     HostelListComponent,
   },
   setup() {
-    // Ініціалізація змінної для даних гуртожитків
-    const hostelsDescription = ref([]); // Початкове значення - порожній масив
-
-    // Завантаження даних за допомогою axios або іншого методу
+    const hostelsDescription = ref([]); 
     const loadHostelsDescription = async () => {
       try {
-        const response = await axios.get('http://192.168.197.153:8081/api/hostels'); // Замість '/api/hostels' використовуйте правильний URL
+        const response = await axios.get('http://192.168.197.153:8081/api/hostels'); 
         if (response.data && Array.isArray(response.data)) {
-          hostelsDescription.value = response.data; // Записуємо отримані дані у змінну
+          hostelsDescription.value = response.data;
         } else {
           console.error("Дані гуртожитків не є масивом", response.data);
         }
@@ -145,5 +153,48 @@ export default {
 
 .choose-btn:hover {
   background-color: #4848e5;
+}
+.error_block {
+  display: flex;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; 
+  background-color: #f4f4f4; 
+}
+
+.message_block {
+  max-width: 600px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 15px; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+  text-align: center;
+  
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.error_page p {
+  font-size: 24px;
+  color: #2d08b5;
+  margin: 0;
+}
+.error_page span {
+  font-size: 18px;
+  color:  #2d08b5;
+  padding-top: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

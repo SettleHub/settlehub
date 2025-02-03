@@ -1,9 +1,9 @@
 <template>
-  <div class="hostel_view_inner">
+  <div v-if="floorsData && floorsData.floors && floorsData.floors.length > 0" class="hostel_view_inner">
     <div class="hostel_view_wrapper">
 
       <div class="navigation_wrapper">
-        <nav class="floors_nav">
+        <nav class="floors_nav" v3>
           <ul class="floors_links_list">
             <li v-for="f in floorsData.floors" :key="f.floorNumber">
               <ButtonSelect
@@ -17,7 +17,6 @@
             </li>
           </ul>
         </nav>
-
         <div class="hostel_title_wrapper">
           <h2 class="hostel_title">Гуртожиток №{{this.id}}</h2>
         </div>
@@ -58,31 +57,46 @@
 
     </div>
   </div>
-</template>
 
-<script>
-import FloorChessboardComponent from "@/components/FloorChessboard.vue";
-import { reactive, onMounted } from "vue";
-import axios from "axios";
-import ButtonSelect from "@/components/ButtonSelect.vue";
+  <div v-else class="error_block">
+<div class="error_page">
+  <div class="message_block">
+  <p>Sorry, but the service is unavailable</p>
+    <span>Please, come back later or reload page</span>
+      </div>  
+    </div>
+    </div>
+      
+  </template>
 
-export default {
-  name: "HostelFloorsViewComponent",
-  props: ['id', 'floorNumber'],
-  components: {
-    ButtonSelect,
-    FloorChessboardComponent
-  },
-  setup(props) {
-    let floorsData = reactive({
-      floors: [],
-      firstRoom: 0,
-      lastRoom: 0,
-    });
+  <script>
+  import FloorChessboardComponent from "@/components/FloorChessboard.vue";
+  import { reactive, onMounted } from "vue";
+  import axios from "axios";
+  import ButtonSelect from "@/components/ButtonSelect.vue";
+  import { onBeforeRouteUpdate } from "vue-router";
 
-    onMounted(() => {
-      axios.get(`http://127.0.0.1:8081/api/view/hostel/${props.id}`)
-        .then(response => {
+  export default {
+    name: "HostelFloorsViewComponent",
+    props: ['id', 'floorNumber'],
+    components: {
+      ButtonSelect,
+      FloorChessboardComponent
+    },
+    setup(props) {
+      let floorsData = reactive({
+        floors: [],
+        firstRoom: 0,
+        lastRoom: 0,
+      });
+      onBeforeRouteUpdate((to) => {
+        if (!to.params.f) {
+          alert("No choose hostel");
+        }
+      });
+      onMounted(() => {
+        axios.get(`http://127.0.0.1:8081/api/view/hostel/${props.id}`)
+          .then(response => {
           floorsData.floors = response.data.floors || [];
           floorsData.firstRoom = response.data.firstRoom;
           floorsData.lastRoom = response.data.lastRoom;
@@ -92,6 +106,7 @@ export default {
         });
     });
 
+
     return {
       floorsData
     };
@@ -100,6 +115,49 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.error_block {
+  display: flex;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; 
+  background-color: #f4f4f4; 
+}
+
+.message_block {
+  max-width: 600px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 15px; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+  text-align: center;
+  
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.error_page p {
+  font-size: 24px;
+  color: #2d08b5;
+  margin: 0;
+}
+.error_page span {
+  font-size: 18px;
+  color:  #2d08b5;
+  padding-top: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .scrollable {
   overflow-x: auto;
