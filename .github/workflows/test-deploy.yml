@@ -1,0 +1,23 @@
+name: Deploy to test web server
+on:
+    workflow_run:
+        workflows: ['Build Vue']
+        types: [completed]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+            with:
+              ref: 'gh-pages'
+
+          - name: Install lftp
+            run: sudo apt update && sudo apt install -y lftp
+
+          - name: Update files via FTP
+            run: |
+              lftp -e "mirror -R ./ /htdocs/" -u ${{ secrets.TEST_SERVER_FTP_USER }},${{ secrets.TEST_SERVER_FTP_PASSWORD }} -p ${{ secrets.TEST_SERVER_FTP_PORT }} ${{ secrets.TEST_SERVER_FTP_HOST }}
+              
