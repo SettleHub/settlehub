@@ -1,17 +1,10 @@
 <template>
-    <div>
-    <div v-if="hostelsDescription && hostelsDescription.length > 0">
-      <HostelListComponent :hostels="hostelsDescription" />
-    </div>
-    <div v-else>
-    <div class="error_block">
-      <div class="error_page">
-        <div class="message_block">
-        <p>Sorry, but the service is unavailable</p>
-         <span>Please, come bfkogfkoack later</span>
-        </div>  
-      </div>
-    </div>  
+<div>
+  <div v-if="hostelsDescription && hostelsDescription.length > 0">
+    <HostelListComponent :hostels="hostelsDescription" />
+  </div>
+  <div v-else>
+    <ServiceUnvailibleComponent />
   </div>
 </div>
 
@@ -20,18 +13,20 @@
 <script>
 import {ref, onMounted} from 'vue';
 import HostelListComponent from "@/components/HostelList.vue";
-import axios from 'axios'; 
+import axios from 'axios';
+import ServiceUnvailibleComponent from "@/components/ServiceUnvailibleComponent.vue";
 
 export default {
   name: "HostelsListViewComponent",
   components: {
+    ServiceUnvailibleComponent,
     HostelListComponent,
   },
   setup() {
     const hostelsDescription = ref([]); 
     const loadHostelsDescription = async () => {
       try {
-        const response = await axios.get('http://192.168.197.153:8081/api/hostels'); 
+        const response = await axios.get('http://127.0.01:8081/api/hostels/');
         if (response.data && Array.isArray(response.data)) {
           hostelsDescription.value = response.data;
         } else {
@@ -42,7 +37,6 @@ export default {
       }
     };
 
-   
     onMounted(() => {
       loadHostelsDescription();
     });
@@ -54,12 +48,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .dorm-info {
-  background-color: #f9fbff;
+  background-color: $background-white;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  @include shadow-light;
   width: 100%; /* Ширина на 100% доступної площі */
   max-width: 1100px; /* Максимальна ширина */
   height: auto; /* Автоматична висота, щоб підлаштуватися під контент */
@@ -83,7 +77,7 @@ export default {
 }
 
 .dorm-info h2 {
-  color: #323a56;
+  color: $text-dark-blue;
   margin-bottom: 20px;
   display: flex;
   justify-content: row;
@@ -142,59 +136,19 @@ export default {
 }
 
 .choose-btn {
-  background-color: #5a5eff;
-  color: #fff;
+  background-color: $bright-blue;
+  color: $text-white;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
-  font-size: 16px;
+  @include calibri-bold;
+  @include responsive-font(16, 16, 1440);
   cursor: pointer;
 }
 
 .choose-btn:hover {
-  background-color: #4848e5;
-}
-.error_block {
-  display: flex;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  justify-content: center;
-  align-items: center;
-  height: 70vh; 
-  background-color: #f4f4f4; 
+  background-color: $bright-blue;
+  @include shadow-light;
 }
 
-.message_block {
-  max-width: 600px;
-  padding: 40px;
-  background-color: white;
-  border-radius: 15px; 
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
-  text-align: center;
-  
-  opacity: 0;
-  transform: translateY(-20px);
-  animation: fadeIn 0.5s ease-in-out forwards;
-}
-
-.error_page p {
-  font-size: 24px;
-  color: #2d08b5;
-  margin: 0;
-}
-.error_page span {
-  font-size: 18px;
-  color:  #2d08b5;
-  padding-top: 10px;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 </style>

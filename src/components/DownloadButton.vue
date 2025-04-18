@@ -1,48 +1,50 @@
-  <template>
-  <button class="click-button" @click="openFile">
+<template>
+  <a class="click-button"
+        :href="filePath"
+        :download="fileName"
+        :style="buttonStyle">
     <span class="button-label">{{ label }}</span>
-    <img src="@/assets/file.pdf.icon.svg" alt="icon" class="button-icon" />
-  </button>
+    <img :src="icon" alt="icon" class="button-icon" />
+  </a>
 </template>
 
 <script>
+
+import DefaultIcon from '@/assets/file.pdf.icon.svg';
+
 export default {
   name: "DownloadButton",
   props:{
     label:{
       type: String,
       default: "Заява",
-
     },
     filePath: {
       type: String,
-      default: "/src/assets/logo.picture.png"
     },
-    
+    fileName: {
+      type: String,
+    },
+    icon: {
+      type: String,
+      default: DefaultIcon
+    },
+    paddingV: {
+      type: Number,
+      default: 10,
+    },
+    paddingH: {
+      type: Number,
+      default: 40,
+    }
   },
-  methods: {
-    //    handleClick() {
-    //     this.$emit("click"); // Емісія події на головний компонент
-    //     console.log("button clicked")
-    //     let filePath = '/src/assets/logo.picture.png';
-        
-    //      let downloadLink = document.createElement('a');
-    //     downloadLink.href = filePath;
-    //     downloadLink.target = '_blank';
-    //     downloadLink.download = '';
-    //     document.body.appendChild(downloadLink);
-    //     downloadLink.click();
-    //     document.body.removeChild(downloadLink); 
-
-    //   }, 
-    //   openFile() {
-    //   const fileUrl = this.filePath.startsWith("/")
-    //     ? `${process.env.BASE_URL}${this.filePath}`
-    //     : this.filePath;
-      
-    //   window.open(fileUrl, "_blank");
-    // },
+  computed: {
+    buttonStyle() {
+      return {
+        padding: `${this.paddingV}px ${this.paddingH}px`,
+      };
     },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -52,31 +54,27 @@ export default {
   justify-content: center;
   gap: 8px;
   padding: 8px 16px;
-  background-color: #f4f8ff;
+  background-color: $background-gray;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  color: #17ABEB;
   text-decoration: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .click-button:hover {
-  background-color: #e0ecff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  background-color: $gainsboro-gray;
+  @include shadow-light;
 }
 
 .click-button:active {
-  background-color: #cfdcff;
+  background-color: $gainsboro-gray;
 }
 
 .button-label {
-  font-size: 16px;
-  color: #17ABEB;
+  color: $deep-sky-blue;
+  @include poppins-semibold;
+  @include responsive-font(16, 14, 1440);
 }
 
 .button-icon {
