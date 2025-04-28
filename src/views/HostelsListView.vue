@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, getCurrentInstance} from 'vue';
 import HostelListComponent from "@/components/HostelList.vue";
 import axios from 'axios';
 import ServiceUnvailibleComponent from "@/components/ServiceUnvailibleComponent.vue";
@@ -23,10 +23,11 @@ export default {
     HostelListComponent,
   },
   setup() {
+    const {proxy} = getCurrentInstance();
     const hostelsDescription = ref([]); 
     const loadHostelsDescription = async () => {
       try {
-        const response = await axios.get('http://127.0.01:8081/api/hostels/');
+        const response = await axios.get(`${proxy.#api}/hostels/`);
         if (response.data && Array.isArray(response.data)) {
           hostelsDescription.value = response.data;
         } else {

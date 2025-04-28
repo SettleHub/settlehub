@@ -39,8 +39,10 @@
       <h3 class="upload-header">Завантаження документів</h3>
       <div class="upload-section">
         <div class="column">
+          
           <label class="action-title">1. Заповніть та завантажте скан заяви</label>
           <DownloadButton
+
               :fileName="'zayava_lizhko-mistse.pdf'"
               :filePath="'/files/zayava_lizhko-mistse.pdf'" />
           <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
@@ -52,9 +54,8 @@
             ref="fileUploader"
           />
         </div>
+        
 
-
-          <!-- Завантаження паспорту -->
           <label class="action-title">2. Завантажити скан паспорту</label>
           <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
             <FileUploader
@@ -65,7 +66,6 @@
             />
           </div>
 
-          <!-- Завантаження ідентифікаційного коду -->
           <label class="action-title">3. Завантажити скан ідентифікаційного коду</label>
           <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
 
@@ -79,7 +79,6 @@
         </div>
 
         <div class="column expanded-column">
-          <!-- Завантаження фото -->
           <label class="action-title">4. Завантажити фото</label>
           <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
             <FileUploader
@@ -89,9 +88,9 @@
               :uploadIcon="uploadPicturesIcon"
               ref="fileUploader"
             />
+          
           </div>
 
-          <!-- Вибір статі -->
           <label class="action-title">5. Вкажіть вашу стать</label>
           <div class="upload-item-gender">
             <div class="gender-select">
@@ -106,16 +105,15 @@
             </div>
           </div>
 
-          <!-- Контактні дані -->
           <label class="action-title">6. Надайте контактні дані</label>
           <div class="upload-item-contacts contact-info">
             <InputText :type="'tel'" :placeholder="'Номер телефону'" :isRequired="true" />
+
             <InputText :type="'mail'" :placeholder="'Електронна пошта'" :isRequired="true" />
           </div>
         </div>
       </div>
 
-      <!-- Кнопка відправити -->
       <button class="submit-button">Відправити</button>
     </div>
   </div>
@@ -169,7 +167,6 @@ export default {
       });
     },
     resetForm() {
-      // Reset uploaded files
       this.uploadedFiles = {
         statement: false,
         passport: false,
@@ -177,10 +174,8 @@ export default {
         photo: false
       };
 
-      // Reset gender selection
       this.gender = null;
 
-      // You can also clear the files in the file uploader component if needed
       this.$nextTick(() => {
         const uploaderRefs = this.$refs.fileUploader;
         uploaderRefs.forEach((uploaderRef) => {

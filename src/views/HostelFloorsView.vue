@@ -66,7 +66,7 @@
 
   <script>
   import FloorChessboardComponent from "@/components/FloorChessboard.vue";
-  import { reactive, onMounted } from "vue";
+  import { reactive, onMounted, getCurrentInstance } from "vue";
   import axios from "axios";
   import ButtonSelect from "@/components/ButtonSelect.vue";
   import ServiceUnvailibleComponent from "@/components/ServiceUnvailibleComponent.vue";
@@ -79,7 +79,8 @@
       ButtonSelect,
       FloorChessboardComponent
     },
-    setup(props) {
+    setup(props){
+      const {proxy} =  getCurrentInstance();
       let floorsData = reactive({
         floors: [],
         firstRoom: 0,
@@ -87,7 +88,7 @@
       });
     
       onMounted(() => {
-        axios.get(`http://127.0.0.1:8081/api/view/hostel/${props.id}`)
+        axios.get(`${proxy.$api}/view/hostel/${props.id}`)
           .then(response => {
           floorsData.floors = response.data.floors || [];
           floorsData.firstRoom = response.data.firstRoom;
@@ -98,12 +99,12 @@
         });
     });
 
-
     return {
       floorsData
     };
   }
-};
+}
+  
 </script>
 
 <style scoped lang="scss">

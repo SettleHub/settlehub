@@ -4,7 +4,6 @@
     <HeaderComponent />
       <RouterView />
     <FooterComponent />
-
     </main>
   </div>
 </template>
@@ -24,7 +23,6 @@ export default {
 </script>
 
 <style lang="css">
-  /* Something on the way. */
 
   body {
     margin: 0;
