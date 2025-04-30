@@ -39,23 +39,33 @@
       <h3 class="upload-header">Завантаження документів</h3>
       <div class="upload-section">
         <div class="column">
-          
-          <label class="action-title">1. Заповніть та завантажте скан заяви</label>
+          <div v-if="showInstructions" @click="hidePopup($event)" class="popup-inner">
+            <div class="popup-wrapper">
+              <KepInfoForm :hidePopup="hidePopup" v-model:device="this.device" />
+            </div>
+          </div>
+          <div class="action-title-wrapper">
+            <label class="action-title">
+                1. Завантажте підписану заяву з Дія.Підпис
+            </label>
+            <ButtonSelect
+                type="button"
+                :paddingV="5"
+                :paddingH="10"
+                :style="{ width: 'max-content', height: 'max-content', minWidth: '0', padding: '0px 6px 0px 6px', margin: '0 0 0 18px', cursor: 'pointer' }"
+                label="?"
+                @click="showPopup($event)" />
+          </div>
           <DownloadButton
-
               :fileName="'zayava_lizhko-mistse.pdf'"
               :filePath="'/files/zayava_lizhko-mistse.pdf'" />
           <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
-
-          <FileUploader
-            label="Завантажити заповнену заяву"
-            @change="handleFileUpload('statement')"
-            @files-cleared="resetFile('statement')"
-            ref="fileUploader"
-          />
-        </div>
-        
-
+            <FileUploader
+                label="Завантажити заповнену заяву"
+                @change="handleFileUpload('statement')"
+                @files-cleared="resetFile('statement')"
+                ref="fileUploader"/>
+          </div>
           <label class="action-title">2. Завантажити скан паспорту</label>
           <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
             <FileUploader
@@ -83,12 +93,11 @@
           <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
             <FileUploader
               label="Завантажити заповнену заяву"
-              @change="handleFileUpload('idCode')"
+              @change="handleFileUpload('photo')"
               @files-cleared="resetForm"
               :uploadIcon="uploadPicturesIcon"
               ref="fileUploader"
             />
-          
           </div>
 
           <label class="action-title">5. Вкажіть вашу стать</label>
@@ -122,9 +131,9 @@
 
 <script>
 import DownloadButton from '@/components/DownloadButton.vue';
-import FileUploader from '../components/FileUploader.vue';
+import FileUploader from '@/components/FileUploader.vue';
 import ButtonSelect from '@/components/ButtonSelect.vue';
-
+import KepInfoForm from "@/components/KepInfoForm.vue";
 import UploadPictureIcon from '@/assets/photos.icon.svg';
 import InputText from "@/components/InputTextComponent.vue";
 
@@ -135,6 +144,7 @@ export default {
     DownloadButton,
     FileUploader,
     ButtonSelect,
+    KepInfoForm
   },
   data() {
     return {
@@ -144,7 +154,9 @@ export default {
         passport: false,
         idCode: false,
         photo: false
-      }
+      },
+      showInstructions: false,
+      device: this.$route.query.device || 'mobile'
     };
   },
   computed: {
@@ -186,12 +198,83 @@ export default {
     },
     isUploadComplete() {
       return Object.values(this.uploadedFiles).some(Boolean);
+    },
+    showPopup(event) {
+      event.preventDefault();
+      document.documentElement.classList.add('scroll-hidden');
+      document.body.classList.add('scroll-hidden');
+      this.showInstructions = true;
+      this.$router.push({
+        query: {
+          ...this.$route.query,
+          instruction: 'true',
+          device: this.$route.query.device || this.device || 'mobile'
+        }
+      });
+    },
+    hidePopup(event) {
+      event.preventDefault();
+      if (event.target.classList.contains('popup-inner') || event.target.classList.contains('button-close')) {
+        document.documentElement.classList.remove('scroll-hidden');
+        document.body.classList.remove('scroll-hidden');
+        this.showInstructions = false;
+        const rest = { ...this.$route.query };
+        delete rest.instruction;
+        delete rest.device;
+        this.$router.replace({ query: rest });
+      }
+    }
+  },
+  watch: {
+    device(newVal) {
+      const newQuery = {
+        ...this.$route.query,
+        device: newVal
+      };
+      this.$router.replace({ query: newQuery });
+    }
+  },
+  mounted() {
+    if (this.$route.query.instruction === 'true') {
+      this.showPopup(new Event('Opening Popup'));
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
+.scroll-hidden {
+  overflow: hidden;
+  height: 100%;
+}
+
+.popup-inner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  padding: 8% 6% 8%;
+  background-color: $background-black-30;
+}
+.popup-wrapper {
+  max-width: 1250px;
+  width: 86%;
+  margin: 0 auto;
+  @include shadow-light;
+}
+@media (max-width: 600px) {
+  .popup-inner {
+      padding: 60px 10px 290px;
+  }
+  .popup-wrapper {
+    width: 100%;
+    padding: 20px 15px 30px;
+  }
+}
+
 .form-container {
   max-width: 1275px;
   margin: 0 auto;
@@ -296,6 +379,12 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.action-title-wrapper {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
 }
 
 .action-title {

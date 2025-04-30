@@ -2,7 +2,7 @@
   <div>
     <router-link v-if="isLink" :to="route">
       <button
-          :class="`select-button ${isActive ? 'active' : ''}`"
+          :class="`select-button ${isActive ? 'active' : ''} ${className}`"
           :style="buttonStyle"
           @click="handleClick"
       >
@@ -12,7 +12,7 @@
 
     <button
         v-else
-        :class="`select-button ${isActive ? 'active' : ''}`"
+        :class="`select-button ${isActive ? 'active' : ''} ${className}`"
         :style="buttonStyle"
         @click="handleClick"
     >
@@ -50,7 +50,11 @@ export default {
     route: {
       type: String,
       default: "",
-    }
+    },
+    className: {
+      type: String,
+      default: "",
+    },
   },
   computed: {
     buttonStyle() {
@@ -60,8 +64,8 @@ export default {
     },
   },
   methods: {
-    handleClick() {
-      this.$emit("click");
+    handleClick(event) {
+      this.$emit("click", event);
     },
   },
 };

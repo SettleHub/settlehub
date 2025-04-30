@@ -27,7 +27,7 @@ export default {
     const hostelsDescription = ref([]); 
     const loadHostelsDescription = async () => {
       try {
-        const response = await axios.get(`${proxy.#api}/hostels/`);
+        const response = await axios.get(`${proxy.$api}/hostels/`);
         if (response.data && Array.isArray(response.data)) {
           hostelsDescription.value = response.data;
         } else {
