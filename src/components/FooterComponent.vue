@@ -105,6 +105,31 @@
       color: $text-light-gray;
     }
   }
+
+  @media (max-width: 768px) {
+    .footer_inner {
+      padding: 20px;
+    }
+
+    .footer_wrapper {
+      flex-direction: column;
+      gap: 80px;
+      .navigation_block {
+        align-self: flex-start;
+      }
+      .contacts_block {
+        align-self: flex-end;
+      }
+    }
+
+    .navigation {
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .link-phone img {
+      width: 15px;
+    }
+  }
 </style>
-  
-  
+ 
