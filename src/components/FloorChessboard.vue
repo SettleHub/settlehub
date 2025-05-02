@@ -112,6 +112,7 @@ export default {
 
 <style scoped lang="scss">
 .hostel_floor {
+  @include shadow-light;
   border-radius: 20px;
   visibility: hidden;
   width: 0;
@@ -240,8 +241,8 @@ export default {
                 border-radius: 11px;
                 .room-number_text {
                   color: $text-dark-blue;
-                  font-size: 15px;
-                  font-weight: 400;
+                  @include responsive-font(11, 9, 1440);
+                  @include poppins-regular;
                 }
               }
 
@@ -287,50 +288,6 @@ export default {
       }
     }
   }
-
 }
 </style>
 
-<!--<style scoped lang="scss">-->
-<!--.hostel_floor {-->
-<!--  border-radius: 20px;-->
-<!--  visibility: hidden;-->
-<!--  height: 0;-->
-<!--  &.active {-->
-<!--    visibility: visible;-->
-<!--    height: max-content;-->
-<!--  }-->
-<!--  &.hidden {-->
-<!--    visibility: hidden;-->
-<!--    height: 0;-->
-<!--  }-->
-<!--}-->
-
-<!--.floor_wrapper {-->
-<!--  border-radius: 20px;-->
-<!--  border: 3px solid $border-gray;-->
-<!--  display: flex;-->
-<!--  flex-direction: row;-->
-<!--}-->
-
-<!--.floor_unit {-->
-<!--  display: flex;-->
-<!--  flex-direction: column;-->
-
-<!--  .side-one, .side-two {-->
-<!--    display: flex;-->
-<!--    flex-direction: row;-->
-<!--  }-->
-<!--}-->
-
-<!--.side_wrapper {-->
-
-<!--}-->
-
-<!--.room {-->
-<!--  width: 85px;-->
-<!--  height: 120px;-->
-<!--  border-radius: 5px;-->
-<!--  border: 1,5px solid $border-gray;-->
-<!--}-->
-<!--</style>-->

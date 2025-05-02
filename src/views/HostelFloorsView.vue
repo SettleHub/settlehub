@@ -24,11 +24,19 @@
 
       <div class="chessboard_inner">
         <div class="chessboard_wrapper">
-          <ul class="floors_list">
-            <li v-for="f in floorsData.floors" :key="f.floorNumber" :class="`${this.floorNumber == f.floorNumber ? 'scrollable' : ''}`">
+          <div class="scroll-button scroll-left" @click="scrollLeft">
+            <img src="@/assets/left-arrow.icon.svg" alt="Ліворуч" />
+          </div>
+          <ul ref="scrollingRef" class="floors_list">
+            <li v-for="f in floorsData.floors" 
+                :key="f.floorNumber" 
+                :class="`${this.floorNumber == f.floorNumber ? 'scrollable' : ''}`"> 
               <FloorChessboardComponent :roomsData="f.rooms" :isActive="this.floorNumber == f.floorNumber" />
             </li>
           </ul>
+          <div class="scroll-button scroll-right" @click="scrollRight">
+            <img src="@/assets/right-arrow.icon.svg" alt="Праворуч" />
+          </div>
         </div>
 
         <nav class="map_legends_wrapper">
@@ -79,6 +87,14 @@
       ButtonSelect,
       FloorChessboardComponent
     },
+    methods: {
+      scrollLeft() {
+        this.$refs.scrollingRef.scrollBy({ left: -200, behavior: 'smooth' });
+      },
+      scrollRight() {
+        this.$refs.scrollingRef.scrollBy({ left: 200, behavior: 'smooth' });
+      }
+    },
     setup(props){
       const {proxy} =  getCurrentInstance();
       let floorsData = reactive({
@@ -107,9 +123,9 @@
   
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .scrollable {
-  overflow-x: auto;
+  padding: 25px;
 }
 
 .hostel_view_wrapper {
@@ -145,15 +161,20 @@
 }
 
 .chessboard_inner {
-  padding: 90px 138px 0;
+  padding: 65px 115px 0;
 }
 
 .chessboard_wrapper {
-  @include shadow-light;
+  position: relative;
+  display: flex;
+  justify-content: center;
   .floors_list {
+    scroll-behavior: smooth;
+    overflow-x: auto;
+    overflow-y: hidden;
+
     li {
       list-style: none;
-      scroll-behavior: smooth;
       border-radius: 20px;
     }
   }
@@ -169,6 +190,7 @@
   .map_legends_list {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap; 
     gap: 30px;
 
     li {
@@ -209,6 +231,119 @@
 
       }
     }
+  }
+}
+
+.scroll-button {
+  display: none;
+}
+
+@media (max-width: 1440px) {
+  .hostel_view_wrapper {
+    padding: 40px 7vw 50px;
+  }
+
+  .chessboard_inner {
+    padding: 65px 6vw 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .navigation_wrapper {
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+  }
+
+  .hostel_title_wrapper {
+    width: max-content;
+  }
+
+  .chessboard_inner {
+    padding: 65px 0 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .hostel_view_wrapper {
+    padding: 35px 0 40px;
+  }
+
+  .hostel_title_wrapper {
+    padding: 5px 26px;
+  }
+
+  .floors_nav {
+    max-width: 90%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .chessboard_wrapper .floors_list {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .scroll-button {
+    display: block;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 205px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9;
+
+    img {
+      width: 15px;
+    }
+
+    &.scroll-left {
+      left: 5px;
+    }
+    &.scroll-right {
+      right: 5px;
+    }
+  }
+
+  .scrollable {
+    padding: 0;
+  }
+ 
+  .chessboard_inner {
+    padding: 25px 0 0;
+  }
+
+  .map_legends_wrapper {
+    margin-top: 30px;
+    border-radius: 0;
+    padding: 20px;
+    .map_legends_list {
+      flex-direction: column;
+      gap: 10px;
+
+      li .map_legend {
+        width: max-content;
+      }
+    }
+  }
+}
+
+::v-deep(.hostel_floor.active) {
+  @media (max-width: 768px) {
+    padding: 0 40px;
   }
 }
 

@@ -3,7 +3,7 @@
   <header class="header" ref="headerRef" :style="styles">
     <div class="header_inner">
       <nav class="burger-menu-navigation">
-        <Slide disableOutsideClick closeOnNavigation :width="screenWidth">
+        <Slide disableOutsideClick closeOnNavigation noOverlay :width="screenWidth">
           <router-link to="/" class="nav_link">Головна</router-link>
           <router-link to="/hostel/:id" class="nav_link">Обрати кімнату</router-link>
           <router-link to="/upload-document" class="nav_link">Завантаження документів</router-link>

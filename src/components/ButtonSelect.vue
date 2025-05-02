@@ -80,7 +80,7 @@ export default {
       color: $text-white;
     }
     @include poppins-semibold;
-    @include responsive-font(16, 16, 1440);
+    @include responsive-font(16, 9, 1440);
     padding: 10px 40px;
     width: max-content;
     height: max-content;
