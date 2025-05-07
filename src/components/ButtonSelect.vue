@@ -6,7 +6,7 @@
           :style="buttonStyle"
           @click="handleClick"
       >
-        {{ label }}
+        <span>{{ label }}</span>
       </button>
     </router-link>
 
@@ -16,7 +16,7 @@
         :style="buttonStyle"
         @click="handleClick"
     >
-      {{ label }}
+      <span>{{ label }}</span>
     </button>
   </div>
 </template>
@@ -87,6 +87,9 @@ export default {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 </style>

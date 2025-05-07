@@ -39,4 +39,13 @@
     flex-direction: column;
     gap: 70px;
   }
+
+  @media (max-width: 768px) {
+    .hostels_inner {
+      padding: 34px 5%;
+    }
+    .hostels_list {
+      gap: 54px;
+    }
+  }
 </style>

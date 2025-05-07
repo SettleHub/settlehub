@@ -2,7 +2,12 @@
   <div class="card">
     <div class="card_wrapper">
       <div class="information_block">
-        <h3 class="title">{{ hostel.title }}</h3>
+        <div class="title_wrapper">
+          <h3 class="title">{{ hostel.title }}</h3>
+          <div class="button_wrapper">
+            <ButtonSelect :isLink=true :route="`/hostel/${hostel.number}`" :className="'button-select_hostel-mobile'" />
+          </div>
+        </div>
         <div class="description_and_contacts_block">
           <div class="description_block">
             <h4 class="description_title">Хто проживає в гуртожитку:</h4>
@@ -27,7 +32,9 @@
           </div>
         </div>
       </div>
-      <ButtonSelect :isLink=true :route="`/hostel/${hostel.number}`" />
+      <div class="button_block">
+        <ButtonSelect :isLink=true :route="`/hostel/${hostel.number}`" />
+      </div>
     </div>
   </div>
 </template>
@@ -61,20 +68,50 @@ export default {
 .information_block {
   display: flex;
   flex-direction: column;
-  .title {
-    @include poppins-bold;
-    @include responsive-font(24, 20, 1440);
-    color: $text-dark-blue;
-    text-align: start;
+  position: relative;
+  .title_wrapper {
+    display: flex;
+    justify-content: space-between;
+    .title {
+      @include poppins-bold;
+      @include responsive-font(24, 16, 1440);
+      color: $text-dark-blue;
+      text-align: start;
+    }
+    .button_wrapper {
+      display: none;
+      @media (max-width: 768px) {
+        display: block;
+      }
+    }
   }
 }
 
+::v-deep(.button-select_hostel-mobile) {
+  @media (max-width: 768px) {
+    width: 83px;
+    height: 25px;
+  }
+}
+
+.button_block {
+  height: max-content;
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
 
 .description_and_contacts_block {
   margin-top: 20px;
   display: flex;
   flex-direction: row;
-  gap: 69px;
+  column-gap: 70px;
+  row-gap: 15px;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    margin-top: 5px;
+  }
 
   .description_block {
     max-width: 241px;
@@ -84,13 +121,21 @@ export default {
       @include responsive-font(16, 14, 1440);
       color: $text-dark-blue;
       text-align: start;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
     }
     .description_text {
       margin-top: 18px;
       @include poppins-regular;
-      @include responsive-font(13, 12, 1440);
+      @include responsive-font(13, 13, 1440);
       color: $text-light-gray;
       text-align: start;
+
+      @media (max-width: 768px) {
+        margin-top: 0;
+      }
     }
   }
 
@@ -99,7 +144,7 @@ export default {
 
     .contacts_title {
       @include poppins-bold;
-      @include responsive-font(16, 14, 1440);
+      @include responsive-font(16, 13, 1440);
       color: $text-dark-blue;
       text-align: start;
     }
@@ -120,10 +165,14 @@ export default {
           img {
             @include locked-image;
             margin-right: 13px;
+            @media (max-width: 768px) {
+              height: 16px;
+              margin-right: 5px;
+            }
           }
           p {
             @include poppins-medium;
-            @include responsive-font(13, 12, 1440);
+            @include responsive-font(13, 11, 1440);
             color: $text-light-gray;
             text-align: start;
           }
