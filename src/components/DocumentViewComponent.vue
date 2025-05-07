@@ -1,10 +1,10 @@
 <template>
   <div class="form-container">
-    <div class="section-one">
+    <div class="section section-one">
       <div class="room-section">
         <div class="header">
           <h3>Обраний гуртожиток та кімната:</h3>
-          <ButtonSelect label="Змінити" :isLink=true route="/hostels" />
+          <ButtonSelect label="Змінити" :isLink=true route="/hostels" :className="'change_button'" />
         </div>
 
         <div class="room-info">
@@ -22,20 +22,22 @@
           </div>
           <div class="room-detail">
             <span class="label">Блок:</span>
-            <span class="value">110</span>
-            <div class="block-info">
-              <span class="block">Жіночий блок</span>
-            </div>
+            <span class="value value-red_background">
+              <span>А</span>
+            </span>
+<!--            <div class="block-info">-->
+<!--              <span class="block">Жіночий блок</span>-->
+<!--            </div>-->
           </div>
           <div class="room-detail">
             <span class="label">Кімната:</span>
-            <span class="value">A</span>
+            <span class="value">110</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="section-two">
+    <div class="section section-two">
       <h3 class="upload-header">Завантаження документів</h3>
       <div class="upload-section">
         <div class="column">
@@ -44,81 +46,93 @@
               <KepInfoForm :hidePopup="hidePopup" v-model:device="this.device" />
             </div>
           </div>
-          <div class="action-title-wrapper">
-            <label class="action-title">
-                1. Завантажте підписану заяву з Дія.Підпис
-            </label>
-            <ButtonSelect
-                type="button"
-                :paddingV="5"
-                :paddingH="10"
-                :style="{ width: 'max-content', height: 'max-content', minWidth: '0', padding: '0px 6px 0px 6px', margin: '0 0 0 18px', cursor: 'pointer' }"
-                label="?"
-                @click="showPopup($event)" />
+          <div class="column_item">
+            <div class="action-title-wrapper">
+              <label class="action-title">
+                  1. Завантажте підписану заяву з Дія.Підпис
+              </label>
+              <ButtonSelect
+                  type="button"
+                  :paddingV="5"
+                  :paddingH="10"
+                  :style="{ width: 'max-content', height: 'max-content', minWidth: '0', padding: '0px 6px 0px 6px', margin: '0 0 0 18px', cursor: 'pointer' }"
+                  label="?"
+                  :className="'question_button'"
+                  @click="showPopup($event)" />
+            </div>
+            <DownloadButton
+                :fileName="'zayava_lizhko-mistse.pdf'"
+                :filePath="'/files/zayava_lizhko-mistse.pdf'"
+                :className="'download_document'" />
+            <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
+              <FileUploader
+                  label="Завантажити заповнену заяву"
+                  @change="handleFileUpload('statement')"
+                  @files-cleared="resetFile('statement')"
+                  ref="fileUploader"/>
+            </div>
           </div>
-          <DownloadButton
-              :fileName="'zayava_lizhko-mistse.pdf'"
-              :filePath="'/files/zayava_lizhko-mistse.pdf'" />
-          <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
-            <FileUploader
+          <div class="column_item">
+            <label class="action-title">2. Завантажити скан паспорту</label>
+            <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
+              <FileUploader
+                  label="Завантажити заповнену заяву"
+                  @change="handleFileUpload('passport')"
+                  @files-cleared="resetForm"
+                  ref="fileUploader"
+              />
+            </div>
+          </div>
+          <div class="column_item">
+            <label class="action-title">3. Завантажити скан ідентифікаційного коду</label>
+            <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
+
+              <FileUploader
                 label="Завантажити заповнену заяву"
-                @change="handleFileUpload('statement')"
-                @files-cleared="resetFile('statement')"
-                ref="fileUploader"/>
-          </div>
-          <label class="action-title">2. Завантажити скан паспорту</label>
-          <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
-            <FileUploader
-              label="Завантажити заповнену заяву"
-              @change="handleFileUpload('passport')"
-              @files-cleared="resetForm"
-              ref="fileUploader"
-            />
-          </div>
-
-          <label class="action-title">3. Завантажити скан ідентифікаційного коду</label>
-          <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
-
-            <FileUploader
-              label="Завантажити заповнену заяву"
-              @change="handleFileUpload('idCode')"
-              @files-cleared="resetForm"
-              ref="fileUploader"
-            />
-          </div>
+                @change="handleFileUpload('idCode')"
+                @files-cleared="resetForm"
+                ref="fileUploader"
+              />
+            </div>
+            </div>
         </div>
 
         <div class="column expanded-column">
-          <label class="action-title">4. Завантажити фото</label>
-          <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
-            <FileUploader
-              label="Завантажити заповнену заяву"
-              @change="handleFileUpload('photo')"
-              @files-cleared="resetForm"
-              :uploadIcon="uploadPicturesIcon"
-              ref="fileUploader"
-            />
+          <div class="column_item">
+            <label class="action-title">4. Завантажити фото</label>
+            <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
+              <FileUploader
+                label="Завантажити заповнену заяву"
+                @change="handleFileUpload('photo')"
+                @files-cleared="resetForm"
+                :uploadIcon="uploadPicturesIcon"
+                ref="fileUploader"
+              />
+            </div>
           </div>
 
-          <label class="action-title">5. Вкажіть вашу стать</label>
-          <div class="upload-item-gender">
-            <div class="gender-select">
-              <div class="radio_wrapper">
-                <input id="radioButton1" type="radio" value="Дівчина" v-model="gender" />
-                <label for="radioButton1">Дівчина</label>
-              </div>
-              <div class="radio_wrapper">
-                <input id="radioButton2" type="radio" value="Хлопець" v-model="gender" />
-                <label for="radioButton2">Хлопець</label>
+          <div class="column_item">
+            <label class="action-title">5. Вкажіть вашу стать</label>
+            <div class="upload-item-gender">
+              <div class="gender-select">
+                <div class="radio_wrapper">
+                  <input id="radioButton1" type="radio" value="Дівчина" v-model="gender" />
+                  <label for="radioButton1">Дівчина</label>
+                </div>
+                <div class="radio_wrapper">
+                  <input id="radioButton2" type="radio" value="Хлопець" v-model="gender" />
+                  <label for="radioButton2">Хлопець</label>
+                </div>
               </div>
             </div>
           </div>
 
-          <label class="action-title">6. Надайте контактні дані</label>
-          <div class="upload-item-contacts contact-info">
-            <InputText :type="'tel'" :placeholder="'Номер телефону'" :isRequired="true" />
-
-            <InputText :type="'mail'" :placeholder="'Електронна пошта'" :isRequired="true" />
+          <div class="column_item">
+            <label class="action-title">6. Надайте контактні дані</label>
+            <div class="upload-item-contacts contact-info">
+              <InputText :type="'tel'" :placeholder="'Номер телефону'" :isRequired="true" />
+              <InputText :type="'mail'" :placeholder="'Електронна пошта'" :isRequired="false" />
+            </div>
           </div>
         </div>
       </div>
@@ -265,6 +279,7 @@ export default {
   margin: 0 auto;
   @include shadow-light;
 }
+
 @media (max-width: 600px) {
   .popup-inner {
       padding: 60px 10px 290px;
@@ -278,15 +293,16 @@ export default {
 .form-container {
   max-width: 1275px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px 20px 60px;
   @include poppins-bold;
   border-radius: 10px;
 }
+.section {
+  border-radius: 10px;
+  background-color: $background-white;
+}
 
 .room-section {
-  background-color: $background-white;
-  margin-top: 20px;
-  border-radius: 10px;
   padding: 26px 26px 24px 26px;
 }
 
@@ -296,8 +312,25 @@ export default {
   align-items: center;
   margin-bottom: 20px;
   h3 {
-    @include responsive-font(24, 22, 1440);
+    @include responsive-font(24, 12, 1440);
+    @include poppins-bold;
     color: $text-dark-blue;
+  }
+}
+
+::v-deep(.question_button) {
+  @include responsive-font(16, 12, 1440);
+  @media (max-width: 768px) {
+    padding: 3px 7px !important;
+    margin: 0 11px 0 11px;
+    border-radius: 5px;
+  }
+}
+
+::v-deep(.change_button) {
+  @media (max-width: 768px) {
+    width: 73px;
+    height: 22px;
   }
 }
 
@@ -327,18 +360,56 @@ export default {
 .label {
   color: $text-light-gray;
   @include poppins-bold;
-  @include responsive-font(16, 14, 1440);
+  @include responsive-font(16, 10, 1440);
   line-height: 30px;
 }
 
 .value {
-  padding: 10px;
+  padding: 5px 10px;
+  margin-top: 10px;
   border-radius: 5px;
   color: $text-dark-blue;
   @include poppins-bold;
-  @include responsive-font(16, 14, 1440);
+  @include responsive-font(16, 13, 1440);
   width: 80%;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.value-red_background {
+    background: $bright-red;
+    color: $text-white;
+  }
+}
+
+@media (max-width: 768px) {
+  .room-section {
+    padding: 10px 10px 15px;
+  }
+
+  .header {
+    margin-bottom: 15px;
+  }
+
+  .room-info {
+    gap: unset;
+    max-width: unset;
+    margin: 0 10px;
+    width: calc(100% - 20px);
+    justify-content: space-between;
+    &::before {
+      top: 25px;
+    }
+  }
+
+  .label {
+    line-height: 20px;
+  }
+
+  .value {
+    margin-top: 5px;
+    padding: 1px 12px;
+  }
 }
 
 .block-info {
@@ -355,30 +426,44 @@ export default {
 }
 
 .section-two {
-  margin-top: 20px;
-  background-color: $background-white;
-  border-radius: 10px;
+  margin-top: 30px;
   padding: 26px;
 }
 
 .upload-header {
   @include poppins-bold;
-  @include responsive-font(24, 22, 1440);
+  @include responsive-font(24, 16, 1440);
   color: $text-dark-blue;
   margin-bottom: 20px;
 }
 
+@media (max-width: 768px) {
+  .section-two {
+    padding: 9px 10px 33px;
+  }
+  .upload-header {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+}
+
 .upload-section {
   display: flex;
-  gap: 20px;
+  column-gap: 20px;
+  row-gap: 37px;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .column {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  row-gap: 29px;
+  min-width: 220px;
+  @media (max-width: 768px) {
+    row-gap: 37px;
+  }
 }
 
 .action-title-wrapper {
@@ -389,14 +474,22 @@ export default {
 
 .action-title {
   @include poppins-bold;
-  @include responsive-font(16, 14, 1440);
+  @include responsive-font(16, 11, 1440);
   color: $text-dark-blue;
   padding-left: 5px;
+}
+
+::v-deep(.download_document) {
+  margin: 10px 0 4px;
+  @media (max-width: 768px) {
+    margin: 15px 0 18px;
+  }
 }
 
 .upload-item {
   padding: 16px;
   border-radius: 4px;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -407,6 +500,10 @@ export default {
   background-size: 1px 100%, 100% 1px, 1px 100% , 100% 1px;
   background-position: 0 0, 0 0, 100% 0, 0 100%;
   background-repeat: no-repeat;
+
+  @media (max-width: 768px) {
+    padding: 8px 8px 20px;
+  }
 }
 
 .upload-block {
@@ -444,6 +541,7 @@ export default {
 
 .upload-item-gender, .upload-item-contacts {
   padding-left: 25px;
+  margin-top: 12px;
 }
 
 .gender-select {
@@ -466,7 +564,7 @@ input[type="radio"] {
 input[type="radio"] + label {
   color: $text-dark-blue;
   @include poppins-semibold;
-  @include responsive-font(14, 12, 1440);
+  @include responsive-font(14, 10, 1440);
   position: relative;
   padding-left: 35px;
   cursor: pointer;
@@ -532,6 +630,10 @@ input[type="radio"] + label::after {
   flex-direction: column;
   justify-content: start;
   gap: 20px;
+  @media (max-width: 768px) {
+    gap: 13px;
+    padding: 0 10px;
+  }
 }
 
 .contact-field {
@@ -559,6 +661,12 @@ input[type="radio"] + label::after {
   text-align: center;
   &:focus, &:focus-visible {
     outline: none;
+  }
+
+  @media (max-width: 768px) {
+    margin: 50px 12px 0;
+    width: calc(100% - 24px);
+    padding: 7px 10px;
   }
 }
 

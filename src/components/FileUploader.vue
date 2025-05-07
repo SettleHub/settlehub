@@ -148,7 +148,7 @@ export default {
   align-items: center;
   margin: 0 auto;
   @include poppins-semibold;
-  @include responsive-font(16, 14, 1440);
+  @include responsive-font(16, 12, 1440);
 
   .button-img {
     margin-right: 10px;
@@ -198,8 +198,18 @@ export default {
   }
   p {
     @include poppins-medium;
-    @include responsive-font(14, 12, 1440);
+    @include responsive-font(14, 11, 1440);
     color: $text-dark-blue;
+  }
+}
+
+@media (max-width: 768px) {
+  .select-button {
+    padding: 3px 15px !important;
+  }
+
+  .upload-block {
+    padding: 10px;
   }
 }
 </style>

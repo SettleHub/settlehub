@@ -51,9 +51,9 @@ export default {
     border: none;
     border-radius: 5px;
     @include poppins-medium;
-    @include responsive-font(16, 14, 1440);
+    @include responsive-font(16, 13, 1440);
     color: $dark-blue-60;
-    min-width: 330px;
+    max-width: 100%;
     height: 30px;
     transition: 0.5s ease-in-out;
     border: 2px solid transparent;
@@ -62,6 +62,13 @@ export default {
       outline: none;
       border-color: $gainsboro-gray;
       @include shadow-light;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .input-component {
+      height: 20px;
+      padding: 15px 10px !important;
     }
   }
 </style>

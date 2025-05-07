@@ -1,5 +1,5 @@
 <template>
-  <a class="click-button"
+  <a :class="`click-button ${className}`"
         :href="filePath"
         :download="fileName"
         :style="buttonStyle">
@@ -36,7 +36,11 @@ export default {
     paddingH: {
       type: Number,
       default: 40,
-    }
+    },
+    className: {
+      type: String,
+      default: "",
+    },
   },
   computed: {
     buttonStyle() {

@@ -300,7 +300,7 @@
     position: absolute;
     width: 32px;
     height: 32px;
-    top: 205px;
+    top: 175px;
     display: flex;
     justify-content: center;
     align-items: center;
