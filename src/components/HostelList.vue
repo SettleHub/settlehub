@@ -3,7 +3,7 @@
     <div class="hostels_wrapper">
       <ul class="hostels_list">
         <li v-for="h in hostels" :key="h.title">
-          <HostelCardComponent :hostel="h" />
+          <HostelCardComponent :hostel="h" v-model:authorized="hasJwt" />
         </li>
       </ul>
     </div>
@@ -18,12 +18,28 @@
     components: {
       HostelCardComponent,
     },
+    data() {
+      return {
+        hasJwt: !!localStorage.getItem('jwt'),
+      };
+    },
     props: {
       hostels: {
         type: Array,
         required: true,
       },
     },
+    methods: {
+      checkJwt() {
+        this.hasJwt = !!localStorage.getItem('jwt');
+      },
+    },
+    mounted() {
+      window.addEventListener('storage', this.checkJwt);
+    },
+    unmounted() {
+      window.removeEventListener('storage', this.checkJwt);
+    }
   };
 </script>
 

@@ -1,17 +1,17 @@
 <template>
   <form enctype="multipart/form-data">
-    <DocumentViewComponent />
+    <SummerDocumentViewComponent />
   </form>
 </template>
 
 
 <script>
 
-import DocumentViewComponent from '@/components/DocumentViewComponent.vue';
+import SummerDocumentViewComponent from "@/components/SummerDocumentViewComponent.vue";
 
 export default {
   components: {
-    DocumentViewComponent,
+    SummerDocumentViewComponent,
   },
 }
 </script>

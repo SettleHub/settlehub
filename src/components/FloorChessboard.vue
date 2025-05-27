@@ -26,7 +26,10 @@
         <div class="floor_unit rooms_unit">
           <div class="side-one">
 
-            <div v-for="room in floor.sideOne" class="room living" :key="room.roomNumber">
+            <div v-for="room in floor.sideOne"
+                 class="room living"
+                 :key="room.roomNumber"
+                 @click="selectRoom(room.roomNumber)">
               <div class="room-number"><p class="room-number_text">№{{ room.roomNumber }}</p></div>
               <div class="places-living">
                 <div
@@ -40,8 +43,11 @@
           </div>
           <div class="side-two">
 
-            <div v-for="room in floor.sideTwo" class="room living" :key="room.roomNumber">
-              <div class="room-number"><p class="room-number_text">№{{ room.roomNumber }}</p></div>
+            <div v-for="room in floor.sideTwo"
+                 class="room living"
+                 :key="room.roomNumber"
+                 @click="selectRoom(room.roomNumber)">
+            <div class="room-number"><p class="room-number_text">№{{ room.roomNumber }}</p></div>
               <div class="places-living">
                 <div
                     v-for="(place, index) in room.badPlaces"
@@ -81,6 +87,7 @@
 
 <script>
 import {reactive} from "vue";
+import { setHostelRoom } from "@/services/selectStorage";
 
 export default {
   name: "FloorChessboardComponent",
@@ -93,6 +100,12 @@ export default {
       type: Array,
       required: true,
     }
+  },
+  methods: {
+    selectRoom(room) {
+      setHostelRoom(room);
+      this.$router.push('/upload-document');
+    },
   },
   setup(props) {
     const floor = reactive({
@@ -228,6 +241,17 @@ export default {
               position: relative;
               border: 2px solid $border-gray;
               padding: 25px 16px;
+              cursor: pointer;
+              transition: background-color 0.2s ease-in-out;
+              &:hover, &:focus, &:focus-visible {
+                background-color: $bright-blue;
+                .room-number {
+                  background-color: $bright-blue;
+                  .room-number_text {
+                    color: $text-white;
+                  }
+                }
+              }
               .room-number {
                 position: absolute;
                 left: calc(50% - 30px);
@@ -239,7 +263,9 @@ export default {
                 background-color: $gainsboro-gray;
                 border: 5px solid $background-gray;
                 border-radius: 11px;
+                transition: background-color 0.2s ease-in-out;
                 .room-number_text {
+                  transition: color 0.2s ease-in-out;
                   color: $text-dark-blue;
                   @include responsive-font(11, 9, 1440);
                   @include poppins-regular;

@@ -6,13 +6,14 @@
         <nav class="floors_nav" v3>
           <ul class="floors_links_list">
             <li v-for="f in floorsData.floors" :key="f.floorNumber">
-              <ButtonSelect
+              <ButtonComponent
                   :label="`${f.floorNumber} поверх`"
                   :isLink="true"
                   :route="`/hostel/${this.id}/floor/${f.floorNumber}`"
                   :paddingH="20"
                   :paddingV="10"
                   :isActive="this.floorNumber == f.floorNumber"
+                  @click="selectFloor(f.floorNumber)"
               />
             </li>
           </ul>
@@ -76,15 +77,16 @@
   import FloorChessboardComponent from "@/components/FloorChessboard.vue";
   import { reactive, onMounted, getCurrentInstance } from "vue";
   import axios from "axios";
-  import ButtonSelect from "@/components/ButtonSelect.vue";
+  import ButtonComponent from "@/components/ButtonComponent.vue";
   import ServiceUnvailibleComponent from "@/components/ServiceUnvailibleComponent.vue";
+  import { setHostelFloor } from "@/services/selectStorage";
 
   export default {
     name: "HostelFloorsViewComponent",
     props: ['id', 'floorNumber'],
     components: {
       ServiceUnvailibleComponent,
-      ButtonSelect,
+      ButtonComponent,
       FloorChessboardComponent
     },
     methods: {
@@ -93,7 +95,10 @@
       },
       scrollRight() {
         this.$refs.scrollingRef.scrollBy({ left: 200, behavior: 'smooth' });
-      }
+      },
+      selectFloor(floor) {
+        setHostelFloor(floor);
+      },
     },
     setup(props){
       const {proxy} =  getCurrentInstance();
@@ -104,7 +109,11 @@
       });
     
       onMounted(() => {
-        axios.get(`${proxy.$api}/view/hostel/${props.id}`)
+          axios.get(`${proxy.$api}/view/hostel/${props.id}`,{
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            }
+          })
           .then(response => {
           floorsData.floors = response.data.floors || [];
           floorsData.firstRoom = response.data.firstRoom;
@@ -113,6 +122,8 @@
         .catch(error => {
           console.error("Error fetching floors data:", error);
         });
+
+        setHostelFloor(Number(props.floorNumber));
     });
 
     return {

@@ -37,6 +37,10 @@
       </div>
     </div>
 
+    <div v-if="errorMessage != ''" class="section section-error">
+      <h3 class="error_message">{{ errorMessage }}</h3>
+    </div>
+
     <div class="section section-two">
       <h3 class="upload-header">Завантаження документів</h3>
       <div class="upload-section">
@@ -69,75 +73,34 @@
                   label="Завантажити заповнену заяву"
                   @change="handleFileUpload('statement')"
                   @files-cleared="resetFile('statement')"
-                  ref="fileUploader"/>
-            </div>
-          </div>
-          <div class="column_item">
-            <label class="action-title">2. Завантажити скан паспорту</label>
-            <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
-              <FileUploader
-                  label="Завантажити заповнену заяву"
-                  @change="handleFileUpload('passport')"
-                  @files-cleared="resetForm"
                   ref="fileUploader"
-              />
+                  v-model:modelFiles="submissionDocuments" />
             </div>
           </div>
-          <div class="column_item">
-            <label class="action-title">3. Завантажити скан ідентифікаційного коду</label>
-            <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
-
-              <FileUploader
-                label="Завантажити заповнену заяву"
-                @change="handleFileUpload('idCode')"
-                @files-cleared="resetForm"
-                ref="fileUploader"
-              />
-            </div>
-            </div>
         </div>
 
         <div class="column expanded-column">
-          <div class="column_item">
-            <label class="action-title">4. Завантажити фото</label>
-            <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
-              <FileUploader
-                label="Завантажити заповнену заяву"
-                @change="handleFileUpload('photo')"
-                @files-cleared="resetForm"
-                :uploadIcon="uploadPicturesIcon"
-                ref="fileUploader"
-              />
-            </div>
-          </div>
 
           <div class="column_item">
-            <label class="action-title">5. Вкажіть вашу стать</label>
-            <div class="upload-item-gender">
-              <div class="gender-select">
-                <div class="radio_wrapper">
-                  <input id="radioButton1" type="radio" value="Дівчина" v-model="gender" />
-                  <label for="radioButton1">Дівчина</label>
-                </div>
-                <div class="radio_wrapper">
-                  <input id="radioButton2" type="radio" value="Хлопець" v-model="gender" />
-                  <label for="radioButton2">Хлопець</label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column_item">
-            <label class="action-title">6. Надайте контактні дані</label>
+            <label class="action-title">2. Надайте контактні дані</label>
             <div class="upload-item-contacts contact-info">
-              <InputText :type="'tel'" :placeholder="'Номер телефону'" :isRequired="true" />
-              <InputText :type="'mail'" :placeholder="'Електронна пошта'" :isRequired="false" />
+              <InputText v-model:modelValue="phone"
+                         :type="'tel'"
+                         :placeholder="'Номер телефону'"
+                         :isRequired="true" />
+              <InputText v-model:modelValue="email"
+                         :type="'mail'"
+                         :placeholder="'Електронна пошта'"
+                         :isRequired="false" />
             </div>
           </div>
         </div>
       </div>
 
-      <button class="submit-button">Відправити</button>
+      <button type="button"
+              class="submit-button"
+              @click="handleFileUpload"
+      >Відправити</button>
     </div>
   </div>
 </template>
@@ -151,8 +114,8 @@ import KepInfoForm from "@/components/KepInfoForm.vue";
 import UploadPictureIcon from '@/assets/photos.icon.svg';
 import InputComponent from "@/components/InputComponent.vue";
 import { getHostel } from "@/services/selectStorage";
+import { createSubmission } from "@/services/submissions";
 
-// import DocxIcon from '@/assets/';
 export default {
   components: {
     InputText: InputComponent,
@@ -164,6 +127,9 @@ export default {
   data() {
     return {
       hostel: getHostel(),
+      submissionDocuments: [],
+      phone: "",
+      email: "",
       gender: null,
       uploadedFiles: {
         statement: false,
@@ -172,7 +138,8 @@ export default {
         photo: false
       },
       showInstructions: false,
-      device: this.$route.query.device || 'mobile'
+      device: this.$route.query.device || 'mobile',
+      errorMessage: "",
     };
   },
   computed: {
@@ -183,6 +150,68 @@ export default {
   methods: {
     handleFileUpload(type) {
       this.uploadedFiles[type] = true;
+      if (!this.submissionDocuments.length === 0 || !this.phone) {
+        this.errorMessage = "Будь ласка, заповніть всі поля";
+        return;
+      }
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (this.email !== "" && !emailRegex.test(this.email)) {
+        this.errorMessage = "Некоректний формат ел. пошти";
+        return;
+      }
+      this.errorMessage = "";
+      const submissionObject = {
+        submitterId: localStorage.getItem("userId"),
+        phones: {
+          transmittedViaSystem: this.phone,
+        },
+        emails: {
+          transmittedViaSystem: this.email,
+        },
+        type: "SETTLEMENT_STUDENT",
+        description: "",
+      };
+
+      this.postSubmission(submissionObject, this.submissionDocuments);
+    },
+    async postSubmission(data, files) {
+      try {
+        const response = await createSubmission(data, files);
+
+        if (!response) {
+          this.$router.push({ path: '/internal-error' });
+          return;
+        }
+
+        switch (response.status) {
+          case 201:
+            this.$router.push({ path: '/' });
+            break;
+
+          case 207:
+            this.errorMessage = "Деякі файли не вдалося завантажити. Спробуйте ще раз або зверніться до підтримки.";
+            break;
+
+          case 403:
+            this.errorMessage = "У вас немає прав для завантаження файлів або доступу до цієї дії.";
+            break;
+
+          case 409:
+            this.errorMessage = "Заява вже подана. Ви не можете подати її повторно.";
+            break;
+
+          case 500:
+            this.$router.push({ path: '/internal-error' });
+            break;
+
+          default:
+            this.$router.push({ path: '/internal-error' });
+            break;
+        }
+      } catch (error) {
+        console.error("Помилка при відправленні запиту:", error);
+        this.$router.push({ path: '/internal-error' });
+      }
     },
     resetFile(type) {
       this.uploadedFiles[type] = false;
@@ -303,8 +332,17 @@ export default {
   border-radius: 10px;
   background-color: $background-white;
 }
+.section-error {
+  margin-top: 30px;
+  .error_message {
+    @include poppins-bold;
+    @include responsive-font(16, 11, 1440);
+    color: $text-red;
+    text-align: center;
+  }
+}
 
-.room-section {
+.room-section, .section-error {
   padding: 26px 26px 24px 26px;
 }
 
@@ -385,7 +423,7 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .room-section {
+  .room-section, .section-error {
     padding: 10px 10px 15px;
   }
 

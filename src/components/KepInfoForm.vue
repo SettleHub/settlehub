@@ -127,7 +127,7 @@
       </ol>
 
       <div class="close-button-wrapper">
-        <ButtonSelect
+        <ButtonComponent
             type="button"
             :paddingV="10"
             :paddingH="116"
@@ -140,12 +140,12 @@
 </template>
 
 <script>
-import ButtonSelect from '@/components/ButtonSelect.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 import InstructionsToggler from '@/components/InstructionsToggler.vue';
 
 export default {
   components: {
-    ButtonSelect,
+    ButtonComponent,
     InstructionsToggler
   },
   data() {

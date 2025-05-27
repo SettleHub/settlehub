@@ -3,6 +3,9 @@ import HostelsListViewComponent from "../views/HostelsListView.vue";
 import HomeView from "../views/HomeView.vue";
 import DocumentUploadView from "@/views/DocumentUploadView.vue";
 import HostelFloorsViewComponent from "@/views/HostelFloorsView.vue";
+import PersonalCabinetView from "@/views/PersonalCabinetView.vue";
+import InternalErrorView from "@/views/InternalErrorView.vue";
+import NotFoundErrorView from "@/views/NotFoundErrorView.vue";
 
 // No need to use Vue.use(VueRouter) in Vue 3, this is for Vue 2
 
@@ -50,13 +53,50 @@ const routes = [
     path: "/upload-document",
     name: "document-upload",
     component: DocumentUploadView
-  }
+  },
+  {
+    path: "/personal-cabinet",
+    name: "personalCabinet",
+    component: PersonalCabinetView
+  },
+  {
+    path: "/internal-error",
+    name: "InternalServerError",
+    component: InternalErrorView,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFoundErrorView,
+  },
 ];
-
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+
+router.beforeEach((to, from, next) => {
+  const jwt = localStorage.getItem('jwt');
+  const requiresAuth = [
+    '/upload-document',
+    '/hostel/',
+    '/personal-cabinet',
+  ].some(path => to.path.startsWith(path.replace(/:.*?\b/g, '')));
+
+  if (requiresAuth && !jwt) {
+    next({
+      path: to.path,
+      query: {
+        ...to.query,
+        auth: 'true',
+        method: 'login'
+      }
+    });
+  } else {
+    next();
+  }
 });
 
 export default router;

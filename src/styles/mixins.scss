@@ -38,6 +38,15 @@
   font-size: calc(#{$mob-size + px} + #{$add-size} * ((100vw - 320px) / #{$max-width}));
 }
 
+// TEXT
+
+@mixin hide-text-overflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
 //IMAGES
 
 @mixin locked-image {

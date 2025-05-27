@@ -1,12 +1,27 @@
 <template>
   <div  class="header_space-top" />
+  <div v-if="auth" @click="hidePopup($event)" class="popup-inner">
+    <div class="popup-wrapper">
+      <AuthForm :hidePopup="hidePopup"
+          :jwtCheck="checkJwt"
+          v-model:method="this.method"
+          v-model:forgotPassword="this.forgotPassword"/>
+    </div>
+  </div>
   <header class="header" ref="headerRef" :style="styles">
     <div class="header_inner">
       <nav class="burger-menu-navigation">
         <Slide disableOutsideClick closeOnNavigation noOverlay :width="screenWidth">
           <router-link to="/" class="nav_link">Головна</router-link>
-          <router-link to="/hostel/:id" class="nav_link">Обрати кімнату</router-link>
-          <router-link to="/upload-document" class="nav_link">Завантаження документів</router-link>
+          <button v-if="hasJwt"
+                  @click="onChooseRoom"
+                  class="nav_link"
+          >
+            Обрати кімнату
+          </button>
+          <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link>
+          <router-link v-if="hasJwt" to="/personal-cabinet" class="nav_link">Особистий кабінет</router-link>
+          <button v-if="!hasJwt" @click="showPopup($event)" class="nav_link">Авторизуватись</button>
         </Slide>
       </nav>
       <div class="header_wrapper">
@@ -15,8 +30,15 @@
         </div>
         <nav class="navigation">
           <router-link to="/" class="nav_link">Головна</router-link>
-          <router-link to="/hostel/:id" class="nav_link">Обрати кімнату</router-link>
-          <router-link to="/upload-document" class="nav_link">Завантаження документів</router-link>
+          <button v-if="hasJwt"
+                  @click="onChooseRoom"
+                  class="nav_link"
+          >
+            Обрати кімнату
+          </button>
+          <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link>
+          <router-link v-if="hasJwt" to="/personal-cabinet" class="nav_link">Особистий кабінет</router-link>
+          <button v-if="!hasJwt" @click="showPopup($event)" class="nav_link">Авторизуватись</button>
         </nav>
       </div>
     </div>
@@ -24,39 +46,154 @@
 </template>
 
 <script setup>
-  import  { ref, onMounted, onUnmounted } from 'vue';
-  import { useFixedHeader } from "vue-use-fixed-header";
+import  { ref } from 'vue';
+import { useFixedHeader } from "vue-use-fixed-header";
 
-  const headerRef = ref(null);
-  const { styles } = useFixedHeader(headerRef)
-
-  const screenWidth = ref(window.innerWidth)
-
-  function updateWidth() {
-   screenWidth.value = window.innerWidth
-  }
-
-  onMounted(() => {
-    window.addEventListener('resize', updateWidth)
-  })
-
-  onUnmounted(() => {
-    window.removeEventListener('resize', updateWidth)
-  })
+const headerRef = ref(null);
+const { styles } = useFixedHeader(headerRef)
 </script>
 
 <script>
   import { Slide } from 'vue3-burger-menu';
+  import AuthForm from "@/components/AuthForm.vue";
+  import { getHostelNumber, getHostelFloor } from "@/services/selectStorage";
 
   export default {
     name: "HeaderComponent",
     components: {
-      Slide
+      Slide,
+      AuthForm
+    },
+    data() {
+      return {
+        auth: false,
+        method: this.$route.query.method || 'login',
+        forgotPassword: false,
+        screenWidth: window.innerWidth,
+        hasJwt: !!localStorage.getItem('jwt'),
+      };
+    },
+    methods: {
+      showPopup(event) {
+        event.preventDefault();
+        document.documentElement.classList.add('scroll-hidden');
+        document.body.classList.add('scroll-hidden');
+        this.auth = true;
+        const currentQuery = this.$route.query;
+        if (currentQuery.auth !== 'true') {
+          this.$router.push({
+            query: {
+              ...currentQuery,
+              auth: 'true',
+              method: currentQuery.method || this.method || 'login'
+            }
+          });
+        }
+      },
+      hidePopup(event) {
+        event.preventDefault();
+        const target = event?.target;
+
+        if (
+            target && (
+                target.classList?.contains('popup-inner') ||
+                target.classList?.contains('button-close')
+            ) || this.hasJwt
+        ) {
+          document.documentElement.classList.remove('scroll-hidden');
+          document.body.classList.remove('scroll-hidden');
+          this.auth = false;
+          const rest = { ...this.$route.query };
+          delete rest.auth;
+          delete rest.method;
+          delete rest.forgotPassword;
+          this.$router.replace({ query: rest });
+        }
+      },
+      updateWidth() {
+        this.screenWidth = window.innerWidth;
+      },
+      checkJwt() {
+        this.hasJwt = !!localStorage.getItem('jwt');
+      },
+      onChooseRoom() {
+        const id = getHostelNumber();
+        const floorNumber = getHostelFloor();
+        this.$router.push({ name: 'HostelFloorsView', params: { id: id, floorNumber: floorNumber } });
+      },
+    },
+    watch: {
+      method (newVal) {
+        const newQuery = {
+          ...this.$route.query,
+          method: newVal
+        };
+        this.$router.replace({ query: newQuery });
+      },
+    },
+    mounted() {
+      this.$watch(
+        () => this.$route.query.auth,
+        (auth) => {
+          if (auth === 'true') {
+            this.showPopup(new Event('watch trigger'));
+          }
+        },
+        { immediate: true }
+      );
+
+      this.$watch(
+        () => this.$route.fullPath,
+        () => {
+          this.checkJwt();
+        },
+        { immediate: true }
+      );
+
+      window.addEventListener('resize', this.updateWidth);
+      window.addEventListener('storage', this.checkJwt);
+
+    },
+    unmounted() {
+      window.removeEventListener('resize', this.updateWidth);
+      window.removeEventListener('storage', this.checkJwt);
     }
   };
 </script>
   
 <style lang="scss" scoped>
+.scroll-hidden {
+  overflow: hidden;
+  height: 100%;
+}
+
+.popup-inner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  padding: 8% 6% 8%;
+  background-color: $background-black-30;
+}
+.popup-wrapper {
+  max-width: 1250px;
+  width: 86%;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .popup-inner {
+    padding: 60px 10px 290px;
+  }
+  .popup-wrapper {
+    width: 100%;
+    padding: 20px 15px 30px;
+  }
+}
+
   .header_space-top {
     width: 100vw;
     height: 100px;
@@ -96,11 +233,17 @@
     text-decoration: none;
     color: $text-light-gray;
     transition: color 0.3s;
+    background: transparent;
+    cursor: pointer;
+    border: none;
     &.active {
       color: $text-dark-blue;
     }
     &:hover {
       color: $text-dark-blue;
+    }
+    &:focus, &:focus-visible {
+      outline: none;
     }
   }
 
@@ -127,7 +270,7 @@
     gap: 10px;
   }
 
-  ::v-deep(nav.bm-item-list a.nav_link) {
+  ::v-deep(nav.bm-item-list .nav_link) {
     padding: 10px 20px;
     background-color: $background-white;
     color: $text-light-gray;
@@ -135,9 +278,9 @@
     transition: all ease 0.5s;
   }
 
-  ::v-deep(nav.bm-item-list a.nav_link:hover),
-  ::v-deep(nav.bm-item-list a.nav_link:focus),
-  ::v-deep(nav.bm-item-list a.nav_link:focus-visible) {
+  ::v-deep(nav.bm-item-list .nav_link:hover),
+  ::v-deep(nav.bm-item-list .nav_link:focus),
+  ::v-deep(nav.bm-item-list .nav_link:focus-visible) {
     background-color: $bright-blue;
     color: $text-white;
   }

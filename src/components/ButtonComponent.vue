@@ -3,6 +3,7 @@
     <router-link v-if="isLink" :to="route">
       <button
           :class="`select-button ${isActive ? 'active' : ''} ${className}`"
+          :type="type"
           :style="buttonStyle"
           @click="handleClick"
       >
@@ -13,6 +14,7 @@
     <button
         v-else
         :class="`select-button ${isActive ? 'active' : ''} ${className}`"
+        :type="type"
         :style="buttonStyle"
         @click="handleClick"
     >
@@ -25,15 +27,23 @@
 
 <script>
 export default {
-  name: "ButtonSelect",
+  name: "ButtonComponent",
   props: {
     label: {
       type: String,
       default: "Обрати",
     },
+    type: {
+      type: String,
+      default: "button",
+    },
     isActive: {
       type: Boolean,
       default: true,
+    },
+    sizeMax: {
+      type: Boolean,
+      default: false
     },
     paddingV: {
       type: Number,
@@ -42,6 +52,10 @@ export default {
     paddingH: {
       type: Number,
       default: 40,
+    },
+    borderRadius: {
+      type: Number,
+      default: 4,
     },
     isLink: {
       type: Boolean,
@@ -60,11 +74,14 @@ export default {
     buttonStyle() {
       return {
         padding: `${this.paddingV}px ${this.paddingH}px`,
+        width: this.sizeMax ? '100%' : 'max-content',
+        borderRadius: `${this.borderRadius}px`,
       };
     },
   },
   methods: {
     handleClick(event) {
+      if (this.type === 'submit') return;
       this.$emit("click", event);
     },
   },
@@ -85,7 +102,6 @@ export default {
     width: max-content;
     height: max-content;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
     display: flex;
     justify-content: center;
