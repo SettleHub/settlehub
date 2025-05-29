@@ -1,5 +1,5 @@
 <template>
-  <div  class="header_space-top" />
+  <div class="header_space-top" />
   <div v-if="auth" @click="hidePopup($event)" class="popup-inner">
     <div class="popup-wrapper">
       <AuthForm :hidePopup="hidePopup"

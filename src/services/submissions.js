@@ -73,3 +73,24 @@ export async function getSubmissionsBySubmitter(submitterId) {
         };
     }
 }
+
+export async function getActiveSubmissionsCountByOwner(submitterId) {
+    try {
+        const response = await api.get('/submissions/get/activeCount', {
+            params: {
+                submitter_id: submitterId,
+            },
+        });
+
+        return {
+            body: response.data,
+            status: response.status,
+        };
+    } catch (error) {
+        return {
+            body: error.response?.data || { message: 'Unknown error' },
+            status: error.response?.status || 500,
+        };
+    }
+}
+

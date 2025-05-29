@@ -85,11 +85,24 @@ export default {
       const response = await register(username, password);
       if (response) {
         if (response.status === 200) {
+          this.$notify({
+            title: "Пройдіть верифікацію!",
+            text: "Ми надіслали листа для підтвердження на вашу електронну пошту. Будь ласка, перевірте вхідні повідомлення та папку 'Спам'.",
+            type: "info"
+          });
           this.changeMethod('login');
         } else if (response.status === 409) {
-          this.errorMessage = "Користувач з такою поштою вже зареєстрований.";
+          this.$notify({
+            title: "Сталася помилка!",
+            text: "Користувач з такою поштою вже зареєстрований.",
+            type: "error"
+          });
         } else if (response.status === 404) {
-          this.errorMessage = "Нажаль ми не можемо вас зареєструвати на нашому сервісі.";
+          this.$notify({
+            title: "Сталася помилка!",
+            text: "Нажаль ми не можемо вас зареєструвати на нашому сервісі.",
+            type: "error"
+          });
         } else {
           this.$router.push({path: '/internal-error'});
         }

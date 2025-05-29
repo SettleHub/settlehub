@@ -38,6 +38,8 @@
 <!--            :borderRadius="10"-->
 <!--            :className="'login-button button-diia'"-->
 <!--        />-->
+
+<!--        TODO: Forget password functionality! -->
         <router-link
             :to="'/forget-password/'"
             class="forget_password_button"
@@ -148,6 +150,7 @@ form {
 
 .forget_password_button {
   display: block;
+  visibility: hidden;
   margin: 15px auto 0;
   color: $text-light-gray;
   text-align: center;

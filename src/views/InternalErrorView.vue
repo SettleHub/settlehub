@@ -1,6 +1,7 @@
 <template>
   <div>
-    <ServiceUnvailibleComponent :title="'500'" :message="'Перепрошуємо, наші студенти знову все запороли'" />
+    <ServiceUnvailibleComponent :title="'500'"
+                                :message="'Перепрошуємо, наші студенти знову все запороли'" />
   </div>
 </template>
 

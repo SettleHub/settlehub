@@ -7,10 +7,17 @@
             <img src="../assets/logo.picture.png" alt="KNUTD Logotype" />
           </div>
           <nav class="navigation">
-        <router-link to="/" class="nav_link">Головна</router-link>
-        <router-link to="/hostel/:id" class="nav_link">Обрати кімнату</router-link>
-        <router-link to="/upload-document" class="nav_link">Завантаження документів</router-link>
-      </nav>
+            <router-link to="/" class="nav_link">Головна</router-link>
+            <button v-if="hasJwt"
+                    @click="onChooseRoom"
+                    class="nav_link"
+            >
+              Обрати кімнату
+            </button>
+            <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link>
+            <router-link v-if="hasJwt" to="/personal-cabinet" class="nav_link">Особистий кабінет</router-link>
+            <button v-if="!hasJwt" @click="toAuthWindow" class="nav_link">Авторизуватись</button>
+          </nav>
         </div>
         <div class="contacts_block">
           <p class="contacts_title">Контакти</p>
@@ -35,8 +42,45 @@
 </template>
   
 <script>
-  export default {
+import {getHostelFloor, getHostelNumber} from "@/services/selectStorage";
+
+export default {
     name: "FooterComponent",
+    data() {
+      return {
+        auth: false,
+        hasJwt: !!localStorage.getItem('jwt'),
+      };
+    },
+    mounted() {
+      this.$watch(
+          () => this.$route.fullPath,
+          () => {
+            this.checkJwt();
+          },
+          { immediate: true }
+      );
+
+      window.addEventListener('storage', this.checkJwt);
+    },
+    unmounted() {
+      window.removeEventListener('storage', this.checkJwt);
+    },
+    methods: {
+        checkJwt() {
+          this.hasJwt = !!localStorage.getItem('jwt');
+        },
+        onChooseRoom() {
+          const id = getHostelNumber();
+          const floorNumber = getHostelFloor();
+          this.$router.push({ name: 'HostelFloorsView', params: { id: id, floorNumber: floorNumber } });
+        },
+      toAuthWindow() {
+        this.$router.replace({
+          query: { ...this.$route.query, auth: true, method: 'login' }
+        });
+      },
+    }
   };
 </script>
   
@@ -69,6 +113,21 @@
     padding: 5px 0;
     color: $text-light-gray;
     text-decoration: none;
+    transition: color 0.3s;
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    text-align: left;
+
+    &.active {
+      color: $text-dark-blue;
+    }
+    &:hover {
+      color: $text-dark-blue;
+    }
+    &:focus, &:focus-visible {
+      outline: none;
+    }
   }
 
   .logo {

@@ -1,5 +1,10 @@
 <template>
-  <div v-if="floorsData && floorsData.floors && floorsData.floors.length > 0" class="hostel_view_inner">
+  <div v-if="submissionsCount === -1" class="loading_block">
+    <ServiceUnvailibleComponent message="Завантаження..."
+                                textUnderMessage="" />
+  </div>
+
+  <div v-else-if="submissionsCount < submissionsMaxCount && floorsData && floorsData.floors && floorsData.floors.length > 0" class="hostel_view_inner">
     <div class="hostel_view_wrapper">
 
       <div class="navigation_wrapper">
@@ -67,6 +72,12 @@
     </div>
   </div>
 
+  <div v-else-if="submissionsCount >= submissionsMaxCount" class="error_block">
+    <ServiceUnvailibleComponent
+        :message="'Ліміт подання заявок вичерпано'"
+        :textUnderMessage="'Дочекайтеся завершення минулих або ж зверніться до підтримки по допомогу.'" />
+  </div>
+
   <div v-else class="error_block">
     <ServiceUnvailibleComponent />
   </div>
@@ -80,16 +91,30 @@
   import ButtonComponent from "@/components/ButtonComponent.vue";
   import ServiceUnvailibleComponent from "@/components/ServiceUnvailibleComponent.vue";
   import { setHostelFloor } from "@/services/selectStorage";
+  import {getActiveSubmissionsCountByOwner} from "@/services/submissions";
+  import {SUBMISSIONS_MAX_COUNT} from "@/services/credentials";
 
   export default {
     name: "HostelFloorsViewComponent",
     props: ['id', 'floorNumber'],
+    data() {
+      return {
+        submissionsMaxCount: SUBMISSIONS_MAX_COUNT,
+        submissionsCount: -1,
+      };
+    },
     components: {
       ServiceUnvailibleComponent,
       ButtonComponent,
       FloorChessboardComponent
     },
+    mounted() {
+      this.fetchActiveSubmissionsCount();
+    },
     methods: {
+      SUBMISSIONS_MAX_COUNT() {
+        return SUBMISSIONS_MAX_COUNT
+      },
       scrollLeft() {
         this.$refs.scrollingRef.scrollBy({ left: -200, behavior: 'smooth' });
       },
@@ -98,6 +123,51 @@
       },
       selectFloor(floor) {
         setHostelFloor(floor);
+      },
+      async fetchActiveSubmissionsCount() {
+        try {
+          const { body, status } = await getActiveSubmissionsCountByOwner(
+              localStorage.getItem("userId")
+          );
+          if (status === 200) {
+            this.submissionsCount = Number(body);
+          } else {
+            this.showError(status);
+          }
+
+        } catch (error) {
+          console.error('Помилка при завантаженні даних користувача:', error);
+          this.$notify({
+            title: 'Помилка при завантаженні даних користувача.',
+            text: `Деталі: ${error.message}`,
+            type: 'error'
+          });
+        }
+      },
+      showError(status) {
+        let message = 'Невідома помилка.';
+
+        switch (status) {
+          case 403:
+            message = 'У вас немає прав на перегляд цих даних.';
+            break;
+          case 404:
+            message = 'Користувача з таким ID не знайдено.';
+            break;
+          case 401:
+            message = 'Сесія не дійсна або користувача не автентифіковано.';
+            break;
+          case 0:
+            message = 'Немає з’єднання з сервером.';
+            break;
+        }
+
+        console.error('Помилка при завантаженні даних користувача:', status);
+        this.$notify({
+          title: 'Помилка при завантаженні даних користувача',
+          text: `Деталі: ${message}`,
+          type: 'error'
+        });
       },
     },
     setup(props){

@@ -21,7 +21,7 @@
 
                 <InputComponent
                     v-model:modelValue="this.userData.phone"
-                    placeholder="Телефон"
+                    placeholder="+380112223344"
                     type="text"
                     :sizeMax="false"
                     :paddingH="6"
@@ -42,7 +42,7 @@
           <div class="buttons-wrapper flex-right">
             <ButtonComponent
                 :label="'Підтвердити зміни'"
-                :type="'button'"
+                :type="'submit'"
                 :paddingH="47"
                 :paddingV="13"
                 :borderRadius="10"
@@ -53,33 +53,33 @@
         </div>
       </div>
 
-      <div class="block-wrapper">
-        <h5 class="block_header">Змінити пароль</h5>
-        <div class="reset_password-wrapper">
-          <div class="reset_inputs_block">
-            <label class="input_label">Введіть поточний пароль</label>
-            <InputComponent
-                v-model:modelValue="currentPassword"
-                :placeholder="'Пароль'"
-                :type="'password'"
-                :sizeMax="false"
-                :paddingH="6"
-                :paddingV="6"
-                :className="'edit_user_input reset_password'" />
-          </div>
-          <div class="edit_button_block">
-            <ButtonComponent
-                :label="'Продовжити'"
-                :type="'button'"
-                :paddingH="70"
-                :paddingV="13"
-                :borderRadius="10"
-                :className="'continue-button'"
-                @click="continueResetPassword"
-            />
-          </div>
-        </div>
-      </div>
+<!--      <div class="block-wrapper">-->
+<!--        <h5 class="block_header">Змінити пароль</h5>-->
+<!--        <div class="reset_password-wrapper">-->
+<!--          <div class="reset_inputs_block">-->
+<!--            <label class="input_label">Введіть поточний пароль</label>-->
+<!--            <InputComponent-->
+<!--                v-model:modelValue="currentPassword"-->
+<!--                :placeholder="'Пароль'"-->
+<!--                :type="'password'"-->
+<!--                :sizeMax="false"-->
+<!--                :paddingH="6"-->
+<!--                :paddingV="6"-->
+<!--                :className="'edit_user_input reset_password'" />-->
+<!--          </div>-->
+<!--          <div class="edit_button_block">-->
+<!--            <ButtonComponent-->
+<!--                :label="'Продовжити'"-->
+<!--                :type="'button'"-->
+<!--                :paddingH="70"-->
+<!--                :paddingV="13"-->
+<!--                :borderRadius="10"-->
+<!--                :className="'continue-button'"-->
+<!--                @click="continueResetPassword"-->
+<!--            />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
 
     <div v-else class="blocks-wrapper">
@@ -94,7 +94,7 @@
               <div class="personal-information">
                 <p class="email">{{ this.userData?.email || "" }}</p>
                 <p class="phone">{{ this.userData?.phone || "" }}</p>
-                <p class="birthday">{{ this.userData?.birthDate || "" }}</p>
+                <p class="birthday">{{ this.formatBirthDate(this.userData?.birthDate) || "" }}</p>
               </div>
             </div>
           </div>
@@ -156,16 +156,22 @@
                     'Невідомий статус'
                   }}
                 </td>
-                <td>{{ submission?.creationDate != null ? formatDate(date) : "-" }}</td>
-                <td>{{ "-" }}</td>
-                <td>{{ "-" }}</td>
-                <td>{{ "-" }}</td>
-                <td v-if="submission?.blockCell" class="block-cell">
-                  <span class="block-label">А</span>
-                  <span class="block-type">Жіночий блок</span>
+                <td>{{ submission?.creationDate != null ? formatDate(submission.creationDate) : "-" }}</td>
+                <td>{{ submission?.hostel || "-" }}</td>
+                <td>{{ submission?.floor || "-" }}</td>
+                <td>{{ submission?.section || "-" }}</td>
+                <td v-if="submission?.block" class="block-cell">
+                  <span class="block-label">{{ submission?.block }}</span>
+                  <span class="block-type">
+                    {{
+                      submission?.blockGender === 'MALE' ? 'Чоловічий блок' :
+                      submission?.blockGender === 'FEMALE' ? 'Жіночий блок' :
+                      'Невизначений блок'
+                    }}
+                  </span>
                 </td>
                 <td v-else>{{ "-" }}</td>
-                <td>{{ "-" }}</td>
+                <td>{{ (submission?.room != null && submission?.room != 0) ? submission.room : "-" }}</td>
               </tr>
             </tbody>
           </table>
@@ -178,7 +184,7 @@
 <script>
 import InputComponent from "@/components/InputComponent.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
-import {getUserData, logout} from "@/services/auth";
+import {getUserData, logout, updateUserContacts} from "@/services/auth";
 import {getSubmissionsBySubmitter} from "@/services/submissions";
 import dayjs from 'dayjs';
 
@@ -194,7 +200,7 @@ export default {
     };
   },
   mounted() {
-    this.fetchUserData();
+    this.assignFetchedUserData();
     this.fetchSubmissionsData();
   },
   watch: {
@@ -212,11 +218,18 @@ export default {
   methods: {
     async fetchUserData() {
       try {
-        const data = await getUserData();
-        this.userData = data;
+        return await getUserData();
       } catch (error) {
         console.error('Помилка при завантаженні даних користувача:', error);
+        this.$notify({
+          title: "Помилка при завантаженні даних користувача",
+          text: `Деталі: ${error.message}`,
+          type: "error"
+        });
       }
+    },
+    async assignFetchedUserData() {
+      this.userData = await this.fetchUserData();
     },
     async fetchSubmissionsData() {
       try {
@@ -226,6 +239,11 @@ export default {
         this.submissionsData = data;
       } catch (error) {
         console.error('Помилка при завантаженні даних користувача:', error);
+        this.$notify({
+          title: "Помилка при завантаженні даних користувача",
+          text: `Деталі: ${error.message}`,
+          type: "error"
+        });
       }
     },
     toEditing() {
@@ -234,16 +252,109 @@ export default {
     handleLogout() {
       logout();
     },
-    handleUserUpdate() {
-      // TODO: validate data
-      // TODO: request to API
-      this.isEditing = false;
+    async handleUserUpdate() {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (this.userData.email !== "" && !emailRegex.test(this.userData.email)) {
+        this.$notify({
+          title: "Некоректний формат ел. пошти",
+          text: "Перевірте правильність написання вами електронної пошти.",
+          type: "warn"
+        });
+        return;
+      }
+      const phoneRegex = /^\+380\d{9}$/;
+      if (this.userData.phone !== "" && !phoneRegex.test(this.userData.phone)) {
+        this.$notify({
+          title: "Некоректний формат номеру телефону",
+          text: "Перевірте правильність написання вами номеру телефону.",
+          type: "warn"
+        });
+        return;
+      }
+
+      const date = new Date(this.userData.birthDate);
+      const ISODate = this.toLocalISOString(date);
+
+      try {
+        const response = await updateUserContacts(
+            this.userData.email,
+            this.userData.phone,
+            ISODate
+        );
+
+        console.log(response);
+
+        switch (response.status) {
+          case 200:
+            this.$notify({
+              title: "Успіх",
+              text: "Контактні дані оновлено!",
+              type: "success"
+            });
+            this.errorMessage = "";
+            this.isEditing = false;
+            break;
+
+          case 400:
+            this.$notify({
+              title: "Помилка",
+              text: "Невірні правильність написання вами пошти та номеру телефону.",
+              type: "error"
+            });
+            break;
+
+          case 403:
+            this.$notify({
+              title: "Помилка",
+              text: "Доступ заборонено. Спроба змінити чужі дані?",
+              type: "error"
+            });
+            break;
+
+          case 404:
+            this.$notify({
+              title: "Помилка",
+              text: "Користувача не знайдено.",
+              type: "error"
+            });
+            break;
+
+          case 500:
+            this.$router.push({ path: '/internal-error' });
+            break;
+
+          default:
+            this.$router.push({ path: '/internal-error' });
+        }
+
+      } catch (error) {
+        console.error(error);
+        this.$router.push({ path: '/internal-error' });
+      }
+    },
+    toLocalISOString(date) {
+      const pad = n => n.toString().padStart(2, '0');
+      const offset = -date.getTimezoneOffset(); // в хвилинах
+      const sign = offset >= 0 ? '+' : '-';
+      const hours = pad(Math.floor(Math.abs(offset) / 60));
+      const minutes = pad(Math.abs(offset) % 60);
+
+      return date.getFullYear() +
+          '-' + pad(date.getMonth() + 1) +
+          '-' + pad(date.getDate()) +
+          'T' + pad(date.getHours()) +
+          ':' + pad(date.getMinutes()) +
+          ':' + pad(date.getSeconds()) +
+          sign + hours + ':' + minutes;
     },
     continueResetPassword() {
       // TODO: Realize me!
     },
     formatDate(dateString) {
       return dayjs(dateString).format('DD.MM.YYYY, HH:mm');
+    },
+    formatBirthDate(dateString) {
+      return dayjs(dateString).format('DD.MM.YYYY');
     },
   },
 }
@@ -286,6 +397,7 @@ export default {
     background: transparent;
     border-radius: 100%;
     width: 17%;
+    height: max-content;
     max-width: 204px;
     display: flex;
     justify-content: center;
@@ -319,6 +431,24 @@ export default {
   }
 }
 
+@media (max-width: 768px) {
+  .personal_cabinet-wrapper {
+    padding: 63px 12px 32px;
+  }
+  .block-wrapper {
+    padding: 20px 14px;
+  }
+  .user_info-inner {
+    padding: 0;
+  }
+  .user_info-wrapper {
+    gap: 20px;
+    .avatar-wrapper {
+      width: 23%;
+    }
+  }
+}
+
 .buttons-wrapper {
   width: 100%;
   display: flex;
@@ -347,6 +477,7 @@ export default {
 .reset_password-wrapper {
   padding: 0 26px 0;
   margin-top: 20px;
+  overflow-x: auto;
 }
 
 .submissions-table {
@@ -404,6 +535,22 @@ export default {
   }
 }
 
+@media (max-width: 768px) {
+  .submissions-wrapper {
+    padding: 0;
+  }
+
+  .submissions-table {
+    tbody {
+      tr {
+        td {
+          padding: 9px 0;
+        }
+      }
+    }
+  }
+}
+
 ::v-deep(.edit_user_input) {
   @include poppins-bold;
   @include responsive-font(13, 8, 1440);
@@ -432,5 +579,26 @@ export default {
   }
 }
 
+::v-deep(.logout-button) {
+  @media (max-width: 1200px) {
+    padding: 9px 40px !important;
+  }
+  @media (max-width: 768px) {
+    padding: 6px 33px !important;
+    border-radius: 5px !important;
+  }
+}
+
+::v-deep(.edit-button),
+::v-deep(.save-button) {
+  @media (max-width: 1200px) {
+    padding: 9px 20px !important;
+  }
+
+  @media (max-width: 768px) {
+    padding: 6px 10px !important;
+    border-radius: 5px !important;
+  }
+}
 
 </style>

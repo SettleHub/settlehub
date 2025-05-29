@@ -18,7 +18,7 @@
     </div>
 
 
-    <button
+    <button type="button"
       v-if="files.length < maxFiles"
       :class="`select-button ${isActive ? 'active' : ''}`"
       :style="buttonStyle"
@@ -116,6 +116,7 @@ export default {
       this.$refs.fileInput.click();
     },
     handleFileChange(event) {
+      event.preventDefault();
       let selectedFiles = Array.from(event.target.files);
       let availableSlots = this.maxFiles - this.files.length;
 
@@ -232,6 +233,12 @@ export default {
     border: none;
     background-color: transparent;
     cursor: pointer;
+  }
+}
+
+@media (max-width: 768px) {
+  .file-item {
+    width: 75px;
   }
 }
 

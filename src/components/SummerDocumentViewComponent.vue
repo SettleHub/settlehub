@@ -16,18 +16,17 @@
             <span class="label">Поверх:</span>
             <span class="value">{{ this.hostel.floor }}</span>
           </div>
-          <div v-if="this.hostel.cage" class="room-detail">
+          <div v-if="this.hostel.section" class="room-detail">
             <span class="label">Клітка:</span>
-            <span class="value">2</span>
+            <span class="value">{{ this.hostel.section }}</span>
           </div>
           <div v-if="this.hostel.block" class="room-detail">
             <span class="label">Блок:</span>
-            <span class="value value-red_background">
-              <span>А</span>
+            <span :class="`value ${this.hostel.blockGender === 'MALE' ? 'value-blue_background' :
+                                  this.hostel.blockGender === 'FEMALE' ? 'value-red_background' :
+                                  'value-gray_background'}`">
+              <span>{{ this.hostel.block }}</span>
             </span>
-<!--            <div class="block-info">-->
-<!--              <span class="block">Жіночий блок</span>-->
-<!--            </div>-->
           </div>
           <div v-if="this.hostel.room" class="room-detail">
             <span class="label">Кімната:</span>
@@ -35,10 +34,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div v-if="errorMessage != ''" class="section section-error">
-      <h3 class="error_message">{{ errorMessage }}</h3>
     </div>
 
     <div class="section section-two">
@@ -53,16 +48,8 @@
           <div class="column_item">
             <div class="action-title-wrapper">
               <label class="action-title">
-                  1. Завантажте підписану заяву з Дія.Підпис
+                  1. Завантажте підписану заяву на ЛІТНІЙ період
               </label>
-              <ButtonComponent
-                  type="button"
-                  :paddingV="5"
-                  :paddingH="10"
-                  :style="{ width: 'max-content', height: 'max-content', minWidth: '0', padding: '0px 6px 0px 6px', margin: '0 0 0 18px', cursor: 'pointer' }"
-                  label="?"
-                  :className="'question_button'"
-                  @click="showPopup($event)" />
             </div>
             <DownloadButton
                 :fileName="'zayava_lizhko-mistse.pdf'"
@@ -71,7 +58,6 @@
             <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
               <FileUploader
                   label="Завантажити заповнену заяву"
-                  @change="handleFileUpload('statement')"
                   @files-cleared="resetFile('statement')"
                   ref="fileUploader"
                   v-model:modelFiles="submissionDocuments" />
@@ -86,12 +72,14 @@
             <div class="upload-item-contacts contact-info">
               <InputText v-model:modelValue="phone"
                          :type="'tel'"
-                         :placeholder="'Номер телефону'"
-                         :isRequired="true" />
+                         :placeholder="'+380112223344'"
+                         :isRequired="true"
+                         :sizeMax="true" />
               <InputText v-model:modelValue="email"
                          :type="'mail'"
-                         :placeholder="'Електронна пошта'"
-                         :isRequired="false" />
+                         :placeholder="'email@example.com'"
+                         :isRequired="false"
+                         :sizeMax="true" />
             </div>
           </div>
         </div>
@@ -139,7 +127,6 @@ export default {
       },
       showInstructions: false,
       device: this.$route.query.device || 'mobile',
-      errorMessage: "",
     };
   },
   computed: {
@@ -151,15 +138,22 @@ export default {
     handleFileUpload(type) {
       this.uploadedFiles[type] = true;
       if (!this.submissionDocuments.length === 0 || !this.phone) {
-        this.errorMessage = "Будь ласка, заповніть всі поля";
+        this.$notify({
+          title: "Присутні незаповнені поля!",
+          text: "Будь ласка, заповніть всі обов'язкові поля",
+          type: "warn"
+        });
         return;
       }
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (this.email !== "" && !emailRegex.test(this.email)) {
-        this.errorMessage = "Некоректний формат ел. пошти";
+        this.$notify({
+          title: "Некоректний формат ел. пошти",
+          text: "Перевірте правильність написання вами електронної пошти.",
+          type: "warn"
+        });
         return;
       }
-      this.errorMessage = "";
       const submissionObject = {
         submitterId: localStorage.getItem("userId"),
         phones: {
@@ -170,6 +164,12 @@ export default {
         },
         type: "SETTLEMENT_STUDENT",
         description: "",
+        hostel: this.hostel.number || 0,
+        floor: this.hostel.floor || 0,
+        section: this.hostel.section || 0,
+        block: this.hostel.block || "",
+        blockGender: this.hostel.blockGender || 'NOT_SPECIFIED;',
+        room: this.hostel.room || "",
       };
 
       this.postSubmission(submissionObject, this.submissionDocuments);
@@ -185,19 +185,47 @@ export default {
 
         switch (response.status) {
           case 201:
-            this.$router.push({ path: '/' });
+            this.$notify({
+              title: "Успішно!",
+              text: "Заява була успішно передана, слідкуйте за її станом в особистому кабінеті.",
+              type: "success"
+            });
+            setTimeout(() => {
+              this.$router.push({ path: '/' });
+            }, 3000);
             break;
 
           case 207:
-            this.errorMessage = "Деякі файли не вдалося завантажити. Спробуйте ще раз або зверніться до підтримки.";
+            this.$notify({
+              title: "Частково переданий запит.",
+              text: "Деякі файли не вдалося завантажити. Спробуйте ще раз або зверніться до підтримки.",
+              type: "warn"
+            });
             break;
 
           case 403:
-            this.errorMessage = "У вас немає прав для завантаження файлів або доступу до цієї дії.";
+            this.$notify({
+              title: "Сталася помилка!",
+              text: "У вас немає прав для завантаження файлів або доступу до цієї дії.",
+              type: "error"
+            });
             break;
 
           case 409:
-            this.errorMessage = "Заява вже подана. Ви не можете подати її повторно.";
+            this.$notify({
+              title: "Сталася помилка!",
+              text: "Заява вже подана. Ви не можете подати її повторно.",
+              type: "error"
+            });
+            break;
+
+          case 429:
+            this.$notify({
+              title: "Ліміт подання заявок вичерпано.",
+              text: "Дочекайтеся завершення минулих або ж зверніться до підтримки по допомогу.",
+              type: "error"
+            });
+            this.$router.push({ path: '/' });
             break;
 
           case 500:
@@ -210,7 +238,11 @@ export default {
         }
       } catch (error) {
         console.error("Помилка при відправленні запиту:", error);
-        this.$router.push({ path: '/internal-error' });
+        this.$notify({
+          title: "Сталася помилка!",
+          text: `Деталі: ${error.message}`,
+          type: "error"
+        });
       }
     },
     resetFile(type) {
@@ -332,17 +364,8 @@ export default {
   border-radius: 10px;
   background-color: $background-white;
 }
-.section-error {
-  margin-top: 30px;
-  .error_message {
-    @include poppins-bold;
-    @include responsive-font(16, 11, 1440);
-    color: $text-red;
-    text-align: center;
-  }
-}
 
-.room-section, .section-error {
+.room-section {
   padding: 26px 26px 24px 26px;
 }
 
@@ -420,10 +443,18 @@ export default {
     background: $bright-red;
     color: $text-white;
   }
+  &.value-blue_background {
+    background: $bright-blue;
+    color: $text-white;
+  }
+  &.value-gray_background {
+    background: $light-state-gray;
+    color: $text-dark-blue;
+  }
 }
 
 @media (max-width: 768px) {
-  .room-section, .section-error {
+  .room-section {
     padding: 10px 10px 15px;
   }
 
@@ -527,7 +558,7 @@ export default {
 }
 
 .upload-item {
-  padding: 16px;
+  padding: 18px;
   border-radius: 4px;
   margin-top: 12px;
   display: flex;
