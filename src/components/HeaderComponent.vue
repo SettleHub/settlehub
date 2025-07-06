@@ -4,8 +4,8 @@
     <div class="popup-wrapper">
       <AuthForm :hidePopup="hidePopup"
           :jwtCheck="checkJwt"
-          v-model:method="this.method"
-          v-model:forgotPassword="this.forgotPassword"/>
+          v-model:method="method"
+          v-model:forgotPassword="forgotPassword"/>
     </div>
   </div>
   <header class="header" ref="headerRef" :style="styles">
@@ -93,7 +93,6 @@ const { styles } = useFixedHeader(headerRef)
       hidePopup(event) {
         event.preventDefault();
         const target = event?.target;
-
         if (
             target && (
                 target.classList?.contains('popup-inner') ||

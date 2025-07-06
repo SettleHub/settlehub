@@ -169,7 +169,7 @@ export default {
 
   @media (max-width: 768px) {
     .input-component {
-      height: 20px;
+      height: 36px;
       padding: 14px 13px !important;
     }
   }

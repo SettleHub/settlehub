@@ -4,8 +4,11 @@
       <div class="information_block">
         <div class="title_wrapper">
           <h3 class="title">{{ hostel.title }}</h3>
-          <div class="button_wrapper">
-            <ButtonComponent :isLink=true :route="`/hostel/${hostel.number}`" :className="'button-select_hostel-mobile'" />
+          <div v-if="this.authorized" class="button_wrapper">
+            <ButtonComponent :isLink=true
+                             :route="`/hostel/${hostel.number}`"
+                             @click="selectHostel(hostel.number)"
+                             :className="'button-select_hostel-mobile'" />
           </div>
         </div>
         <div class="description_and_contacts_block">

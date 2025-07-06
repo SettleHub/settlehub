@@ -23,15 +23,15 @@
           <p class="contacts_title">Контакти</p>
           <ul class="contacts_list">
             <li>
-              <a class="link-phone" href="tel: +380441234567">
+              <a class="link-phone" href="tel: +380442885132">
                 <img src="../assets/phone.icon.svg" alt="phone" />
-                <p>+380441234567</p>
+                <p>+380442885132</p>
               </a>
             </li>
             <li>
-              <a class="link-phone" href="tel: +380501234567">
-                <img src="../assets/phone.icon.svg" alt="phone" />
-                <p>+380501234567</p>
+              <a class="link-email" href="mailto: nniiit@knutd.edu.ua">
+                <img src="../assets/email.icon.svg" alt="email" />
+                <p>nniiit@knutd.edu.ua</p>
               </a>
             </li>
           </ul>
@@ -149,7 +149,7 @@ export default {
     }
   }
 
-  .link-phone {
+  .link-phone, .link-email {
     text-decoration: none;
     display: flex;
     flex-direction: row;
@@ -186,8 +186,10 @@ export default {
       gap: 10px;
     }
 
-    .link-phone img {
-      width: 15px;
+    .link-phone, .link-email {
+      img {
+        width: 15px;
+      }
     }
   }
 </style>

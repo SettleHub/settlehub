@@ -17,7 +17,7 @@ export default {
   props:{
     label:{
       type: String,
-      default: "Заява",
+      default: "Шаблон заяви",
     },
     filePath: {
       type: String,

@@ -4,11 +4,11 @@
                                 textUnderMessage="" />
   </div>
 
-  <div v-else-if="submissionsCount < submissionsMaxCount && floorsData && floorsData.floors && floorsData.floors.length > 0" class="hostel_view_inner">
+  <div v-else-if="(submissionsCount < submissionsMaxCount && floorsData && floorsData.floors && floorsData.floors.length > 0) && (selectedHostelNumber > 0 && selectedHostelFloor > 0)" class="hostel_view_inner">
     <div class="hostel_view_wrapper">
 
       <div class="navigation_wrapper">
-        <nav class="floors_nav" v3>
+        <nav class="floors_nav">
           <ul class="floors_links_list">
             <li v-for="f in floorsData.floors" :key="f.floorNumber">
               <ButtonComponent
@@ -78,6 +78,14 @@
         :textUnderMessage="'Дочекайтеся завершення минулих або ж зверніться до підтримки по допомогу.'" />
   </div>
 
+  <div v-else-if="selectedHostelNumber <= 0 || selectedHostelFloor <= 0" class="error_block">
+    <ServiceUnvailibleComponent :message="'Не обрано гуртожиток'"
+                                :textUnderMessage="'Щоб продовжити, спочатку оберіть гуртожиток зі списку.'"
+                                :hasButton="true"
+                                :buttonLabel="'Перейти до списку'"
+                                :route="'/hostels'" />
+  </div>
+
   <div v-else class="error_block">
     <ServiceUnvailibleComponent />
   </div>
@@ -90,7 +98,7 @@
   import axios from "axios";
   import ButtonComponent from "@/components/ButtonComponent.vue";
   import ServiceUnvailibleComponent from "@/components/ServiceUnvailibleComponent.vue";
-  import { setHostelFloor } from "@/services/selectStorage";
+  import { setHostelFloor, getHostelNumber, getHostelFloor } from "@/services/selectStorage";
   import {getActiveSubmissionsCountByOwner} from "@/services/submissions";
   import {SUBMISSIONS_MAX_COUNT} from "@/services/credentials";
 
@@ -101,6 +109,8 @@
       return {
         submissionsMaxCount: SUBMISSIONS_MAX_COUNT,
         submissionsCount: -1,
+        selectedHostelNumber: 0,
+        selectedHostelFloor: 0,
       };
     },
     components: {
@@ -110,6 +120,7 @@
     },
     mounted() {
       this.fetchActiveSubmissionsCount();
+      this.fetchSelectedHostelNumberAndFloor();
     },
     methods: {
       SUBMISSIONS_MAX_COUNT() {
@@ -120,6 +131,10 @@
       },
       scrollRight() {
         this.$refs.scrollingRef.scrollBy({ left: 200, behavior: 'smooth' });
+      },
+      fetchSelectedHostelNumberAndFloor() {
+        this.selectedHostelNumber = getHostelNumber();
+        this.selectedHostelFloor = getHostelFloor();
       },
       selectFloor(floor) {
         setHostelFloor(floor);

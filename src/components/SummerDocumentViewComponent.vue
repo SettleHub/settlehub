@@ -52,8 +52,8 @@
               </label>
             </div>
             <DownloadButton
-                :fileName="'zayava_lizhko-mistse.pdf'"
-                :filePath="'/files/zayava_lizhko-mistse.pdf'"
+                :fileName="'zayava_lizhko-mistse.docx'"
+                :filePath="'/files/zayava_lizhko-mistse.docx'"
                 :className="'download_document'" />
             <div class="upload-item" :class="{ 'expanded': isUploadComplete() }">
               <FileUploader

@@ -92,4 +92,19 @@ export default {
   border-radius: 10px;
   @include shadow-light;
 }
+
+@media (max-width: 920px) {
+    .auth_block-wrapper {
+        width: 100%;
+    }
+}
+@media (max-width: 768px) {
+    .form-wrapper {
+        margin-top: 40px;
+    }
+    .auth_block-wrapper {
+        padding: 23px 18px 20px;
+    }
+}
+
 </style>

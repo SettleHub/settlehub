@@ -5,7 +5,7 @@
                                   textUnderMessage="" />
     </div>
 
-    <form v-else-if="submissionsCount < submissionsMaxCount"
+    <form v-else-if="(submissionsCount < submissionsMaxCount) && (selectedHostelNumber > 0 && selectedHostelFloor > 0 && selectedHostelRoom > 0)"
           enctype="multipart/form-data">
       <SummerDocumentViewComponent />
     </form>
@@ -14,6 +14,22 @@
       <ServiceUnvailibleComponent
           :message="'Ліміт подання заявок вичерпано'"
           :textUnderMessage="'Дочекайтеся завершення минулих або ж зверніться до підтримки по допомогу.'" />
+    </div>
+
+    <div v-else-if="selectedHostelNumber <= 0 || selectedHostelFloor <= 0" class="error_block">
+      <ServiceUnvailibleComponent :message="'Не обрано гуртожиток'"
+                                  :textUnderMessage="'Щоб продовжити, спочатку оберіть гуртожиток зі списку.'"
+                                  :hasButton="true"
+                                  :buttonLabel="'Перейти до списку'"
+                                  :route="'/hostels'" />
+    </div>
+
+    <div v-else-if="(selectedHostelNumber > 0 && selectedHostelFloor > 0) && selectedHostelRoom <= 0" class="error_block">
+      <ServiceUnvailibleComponent :message="'Не обрано кімнату'"
+                                  :textUnderMessage="'Щоб продовжити, спочатку оберіть поверх та кімнату на схемі.'"
+                                  :hasButton="true"
+                                  :buttonLabel="'Перейти до вибору кімнат'"
+                                  :route="`/hostel/${selectedHostelNumber}/floor/${selectedHostelFloor}`" />
     </div>
 
     <div v-else class="error_block">
@@ -28,6 +44,7 @@ import SummerDocumentViewComponent from "@/components/SummerDocumentViewComponen
 import { getActiveSubmissionsCountByOwner } from "@/services/submissions";
 import { SUBMISSIONS_MAX_COUNT } from "@/services/credentials";
 import ServiceUnvailibleComponent from "@/components/ServiceUnvailibleComponent.vue";
+import { getHostelFloor, getHostelNumber, getHostelRoom } from "@/services/selectStorage";
 
 export default {
   components: {
@@ -38,10 +55,14 @@ export default {
     return {
         submissionsMaxCount: SUBMISSIONS_MAX_COUNT,
         submissionsCount: -1,
+        selectedHostelNumber: 0,
+        selectedHostelFloor: 0,
+        selectedHostelRoom: 0,
     };
   },
   mounted() {
     this.fetchActiveSubmissionsCount();
+    this.fetchSelectedHostelNumberAndFloorAndRoom();
   },
   methods: {
     async fetchActiveSubmissionsCount() {
@@ -63,6 +84,11 @@ export default {
           type: 'error'
         });
       }
+    },
+    fetchSelectedHostelNumberAndFloorAndRoom() {
+      this.selectedHostelNumber = getHostelNumber();
+      this.selectedHostelFloor = getHostelFloor();
+      this.selectedHostelRoom = getHostelRoom();
     },
     showError(status) {
       let message = 'Невідома помилка.';

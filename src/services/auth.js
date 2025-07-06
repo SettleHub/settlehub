@@ -16,20 +16,31 @@ api.interceptors.request.use(config => {
 
 // Вхід: виконуємо запит і зберігаємо токен
 export async function login(username, password) {
-    const response = await api.post('/identity/signin', {
-        username,
-        password,
-    });
+    try {
+        const response = await api.post('/identity/signin', {
+            username,
+            password,
+        });
 
-    const token = response.data.jwt;
-    if (token) {
-        localStorage.setItem("jwt", token);
+        const token = response.data.jwt;
+        if (token) {
+            localStorage.setItem("jwt", token);
+        }
+        const userId = response.data.id;
+        if (userId) {
+            localStorage.setItem("userId", userId);
+        }
+
+        return {
+            body: response.data,
+            status: response.status,
+        };
+    } catch (error) {
+        return {
+            body: error.response?.data || { message: 'Unknown error' },
+            status: error.response?.status || 500,
+        };
     }
-    const userId = response.data.id;
-    if (userId) {
-        localStorage.setItem("userId", userId);
-    }
-    return response;
 }
 
 export async function register(email, password) {
@@ -104,18 +115,24 @@ export async function updateUserContacts(email, phone, birthDate) {
 
     try {
         if (userId) {
-            // Якщо є userId — отримуємо користувача напряму
             const response = await api.put(`/users/update-contacts?id=${userId}`, {
                 email,
                 phone,
                 birthDate,
             });
-            return response;
+
+            return {
+                body: response.data,
+                status: response.status,
+            };
         } else {
-            logout();
+            console.log(`userId: ${userId}`)
         }
     } catch (error) {
-        throwUserDataError(error);
+        return {
+            body: error.response?.data || { message: 'Unknown error' },
+            status: error.response?.status || 500,
+        };
     }
 }
 

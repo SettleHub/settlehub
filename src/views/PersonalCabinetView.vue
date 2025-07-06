@@ -92,9 +92,9 @@
             <div class="personal_information-wrapper">
               <h4 class="full-name">{{ fullName || "Завантаження..." }}</h4>
               <div class="personal-information">
-                <p class="email">{{ this.userData?.email || "" }}</p>
-                <p class="phone">{{ this.userData?.phone || "" }}</p>
-                <p class="birthday">{{ this.formatBirthDate(this.userData?.birthDate) || "" }}</p>
+                <p class="email">{{ (this.userData?.email != null && this.userData?.email != "" ) ? `Пошта: ${this.userData.email}` : "" }}</p>
+                <p class="phone">{{ (this.userData?.phone != null && this.userData?.phone != "" ) ? `Телефон: ${this.userData.phone}` : "" }}</p>
+                <p class="birthday">{{ (this.userData?.birthDate != null && this.userData?.birthDate != "" ) ? `Дата народження: ${this.formatBirthDate(this.userData.birthDate)}` : "" }}</p>
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@
         <h5 class="block_header">Заявки</h5>
         <div class="submissions-wrapper">
           <table class="submissions-table"
-                 v-if="submissionsData"
+                 v-if="submissionsData?.body != null && Array.isArray(submissionsData.body)"
           >
             <thead>
               <tr>
@@ -175,6 +175,17 @@
               </tr>
             </tbody>
           </table>
+          <div v-else class="submissions_not_found_wrapper">
+            <p>У вас жодної поданої заяви</p>
+            <div class="button_wrapper">
+                <ButtonComponent label="Обрати гуртожиток"
+                                :isLink="true"
+                                route="/"
+                                :paddingV="13"
+                                :borderRadius="10"
+                                :sizeMax="false" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -299,6 +310,14 @@ export default {
             this.$notify({
               title: "Помилка",
               text: "Невірні правильність написання вами пошти та номеру телефону.",
+              type: "error"
+            });
+            break;
+
+          case 401:
+            this.$notify({
+              title: "Помилка",
+              text: "Сесія не дійсна або користувача не автентифіковано.",
               type: "error"
             });
             break;
@@ -557,6 +576,10 @@ export default {
   border: 1px solid $dark-blue;
   max-width: 250px;
   width: 250px;
+
+  @media (max-width: 768px) {
+    height: 20px;
+  }
 }
 .reset_password-wrapper {
   display: flex;
@@ -601,4 +624,20 @@ export default {
   }
 }
 
+.submissions_not_found_wrapper {
+  p {
+    @include poppins-bold;
+    @include responsive-font(18, 16, 1440);
+    color: $text-dark-blue;
+    text-align: center;
+  }
+}
+
+.button_wrapper {
+  margin: 30px 0;
+  padding: 0 10%;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+}
 </style>

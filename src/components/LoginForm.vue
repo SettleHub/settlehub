@@ -19,7 +19,7 @@
       <div class="buttons-wrapper">
         <ButtonComponent
             :label="'Увійти'"
-            :type="'button'"
+            :type="'submit'"
             :sizeMax="true"
             :paddingV="14"
             :borderRadius="10"
@@ -90,12 +90,36 @@ export default {
       const response = await login(username, password);
       if (response) {
         if (response.status == 200) {
-          this.hidePopup(new Event("User authorization"));
-          this.$router.replace({ path: this.$route.path });
-          this.$router.go();
           this.jwtCheck();
+          this.hidePopup(new Event("User authorization"));
+          this.$router.replace({ path: this.$route.path, query: {} })
+              .then(() => {
+                this.$router.go(0);
+              });
+        } else if (response.status === 404) {
+          this.$notify({
+            title: "Сталася помилка!",
+            text: "Користувача з таким логіном не знайдено.",
+            type: "error"
+          });
+        } else if (response.status === 403) {
+          this.$notify({
+            title: "Сталася помилка!",
+            text: "Користувач не пройшов верифікацію! Будь ласка перевірте свою поштову скриньку та пройдіть верифікацію.",
+            type: "error"
+          });
+        } else if (response.status === 401) {
+          this.$notify({
+            title: "Сталася помилка!",
+            text: "Невірний логін або пароль!",
+            type: "error"
+          });
         } else {
-          this.errorMessage = "Невірний логін або пароль!"
+          this.$notify({
+            title: "Сталася помилка!",
+            text: "Невірний логін або пароль!",
+            type: "error"
+          });
         }
       } else {
         this.$router.push({path: '/internal-error'});

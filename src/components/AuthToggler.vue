@@ -52,7 +52,7 @@ export default {
     justify-content: center;
     color: $text-light-gray;
     @include poppins-bold;
-    @include responsive-font(20, 18, 1440);
+    @include responsive-font(20, 13, 1440);
 
     &.active, &:hover {
       color: $text-dark-blue;
