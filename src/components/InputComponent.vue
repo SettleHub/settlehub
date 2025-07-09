@@ -7,6 +7,7 @@
            :style="inputStyle"
            :required="isRequired"
            :value="modelValue"
+           :maxlength="maxValueLength || null"
            @input="$emit('update:modelValue', $event.target.value)"
            @copy="handleAction"
            @paste="handleAction"
@@ -60,6 +61,9 @@ export default {
     paddingH: {
       type: Number,
       default: 15,
+    },
+    maxValueLength: {
+      type: Number,
     },
     className: {
       type: String,

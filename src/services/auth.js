@@ -14,6 +14,13 @@ api.interceptors.request.use(config => {
     return config;
 });
 
+const Method = {
+    GET: "get",
+    POST: "post",
+    PUT: "put",
+    DELETE: "delete"
+};
+
 // Вхід: виконуємо запит і зберігаємо токен
 export async function login(username, password) {
     try {
@@ -44,22 +51,12 @@ export async function login(username, password) {
 }
 
 export async function register(email, password) {
-    try {
-        const response = await api.post('/identity/signup/student', {
+    return request('/identity/signup/student',
+        {
             email,
             password,
-        });
-
-        return {
-            body: response.data,
-            status: response.status,
-        };
-    } catch (error) {
-        return {
-            body: error.response?.data || { message: 'Unknown error' },
-            status: error.response?.status || 500,
-        };
-    }
+        },
+        Method.POST);
 }
 
 export async function getUserData() {
@@ -140,4 +137,55 @@ export function logout() {
     localStorage.removeItem("jwt");
     localStorage.removeItem("userId");
     window.location.href = "/hostels";
+}
+
+
+export async function sendForgotPasswordRequest(email) {
+    return request(`/identity/forgotPassword?email=${email}`,
+        {},
+        Method.POST);
+}
+
+export async function verifyForgotPasswordUserCode(email, code) {
+    return request(`/identity/forgotPassword/verify?email=${email}&code=${code}`,
+        {},
+        Method.POST);
+}
+
+export async function resetForgottenPassword(username, code, password) {
+    return request('/identity/forgotPassword/update',
+        {
+            username,
+            code,
+            password,
+        },
+        Method.POST);
+}
+
+export async function request(path, body, method) {
+    try {
+        let response;
+        switch(method) {
+            case Method.GET:
+                response = await api.get(path, body);
+                break;
+            case Method.POST:
+                response = await api.post(path, body);
+                break;
+            case Method.PUT:
+                response = await api.put(path, body);
+                break;
+            case Method.DELETE:
+                response = await api.delete(path, body);
+        }
+        return {
+            body: response.data,
+            status: response.status,
+        };
+    } catch (error) {
+        return {
+            body: error.response?.data || { message: 'Unknown error' },
+            status: error.response?.status || 500,
+        };
+    }
 }

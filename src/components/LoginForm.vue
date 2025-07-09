@@ -40,12 +40,12 @@
 <!--        />-->
 
 <!--        TODO: Forget password functionality! -->
-        <router-link
-            :to="'/forget-password/'"
+        <button
+            @click="changeMethod('forgot_password')"
             class="forget_password_button"
         >
           Забули пароль?
-        </router-link>
+        </button>
       </div>
     </div>
   </form>
@@ -67,6 +67,11 @@ export default {
     };
   },
   props: {
+    method: {
+      type: String,
+      required: false,
+      default: "login"
+    },
     hidePopup: {
       type: Function,
       required: true
@@ -125,6 +130,9 @@ export default {
         this.$router.push({path: '/internal-error'});
       }
     },
+    changeMethod(newMethod) {
+      this.$emit('update:method', newMethod);
+    },
   },
 }
 </script>
@@ -174,10 +182,19 @@ form {
 
 .forget_password_button {
   display: block;
-  visibility: hidden;
-  margin: 15px auto 0;
+  margin: 15px auto 15px;
   color: $text-light-gray;
   text-align: center;
+  @include poppins-bold;
+  @include responsive-font(15, 11, 1440);
   text-decoration: none;
+  cursor: pointer;
+  transition: all ease 0.2s;
+  background: transparent;
+  border: none;
+
+  &:hover, &:focus, &:focus-visible {
+    color: $text-dark-blue;
+  }
 }
 </style>

@@ -3,12 +3,17 @@
     <AuthToggler v-model:method="this.internalMethod" />
 
     <div v-if="internalMethod === 'login'" class="form-wrapper">
-      <LoginForm :hidePopup="this.hidePopup"
+      <LoginForm v-model:method="this.internalMethod"
+                 :hidePopup="this.hidePopup"
                  :jwtCheck="jwtCheck" />
     </div>
 
     <div v-if="internalMethod === 'register'" class="form-wrapper">
       <RegisterForm v-model:method="this.internalMethod" />
+    </div>
+
+    <div v-if="internalMethod === 'forgot_password'" class="form-wrapper">
+      <ResetPasswordForm v-model:method="this.internalMethod" />
     </div>
 
   </div>
@@ -18,9 +23,11 @@
 import AuthToggler from "@/components/AuthToggler.vue";
 import LoginForm from "@/components/LoginForm.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
+import ResetPasswordForm from "@/components/ResetPasswordForm.vue";
 
 export default {
   components: {
+    ResetPasswordForm,
     LoginForm,
     RegisterForm,
     AuthToggler,
