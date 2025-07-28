@@ -7,7 +7,7 @@
 
     <form v-else-if="(submissionsCount < submissionsMaxCount) && (selectedHostelNumber > 0 && selectedHostelFloor > 0 && selectedHostelRoom > 0)"
           enctype="multipart/form-data">
-      <SummerDocumentViewComponent />
+      <DocumentUploadWrapper />
     </form>
 
     <div v-else-if="submissionsCount >= submissionsMaxCount" class="error_block">
@@ -40,7 +40,7 @@
 
 <script>
 
-import SummerDocumentViewComponent from "@/components/SummerDocumentViewComponent.vue";
+import DocumentUploadWrapper from "@/components/DocumentUploadWrapper.vue";
 import { getActiveSubmissionsCountByOwner } from "@/services/submissions";
 import { SUBMISSIONS_MAX_COUNT } from "@/services/credentials";
 import ServiceUnvailibleComponent from "@/components/ServiceUnvailibleComponent.vue";
@@ -49,7 +49,7 @@ import { getHostelFloor, getHostelNumber, getHostelRoom } from "@/services/selec
 export default {
   components: {
     ServiceUnvailibleComponent,
-    SummerDocumentViewComponent,
+    DocumentUploadWrapper,
   },
   data() {
     return {
