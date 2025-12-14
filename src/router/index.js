@@ -6,6 +6,7 @@ import HostelFloorsViewComponent from "@/views/HostelFloorsView.vue";
 import PersonalCabinetView from "@/views/PersonalCabinetView.vue";
 import InternalErrorView from "@/views/InternalErrorView.vue";
 import NotFoundErrorView from "@/views/NotFoundErrorView.vue";
+import { logout, whoAmI } from "@/services/auth";
 
 // No need to use Vue.use(VueRouter) in Vue 3, this is for Vue 2
 
@@ -77,7 +78,7 @@ const router = createRouter({
 });
 
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const jwt = localStorage.getItem('jwt');
   const requiresAuth = [
     '/upload-document',
@@ -85,17 +86,48 @@ router.beforeEach((to, from, next) => {
     '/personal-cabinet',
   ].some(path => to.path.startsWith(path.replace(/:.*?\b/g, '')));
 
-  if (requiresAuth && !jwt) {
-    next({
-      path: to.path,
+ 
+  if (!requiresAuth) {
+    return next();
+  }
+
+  if (!jwt) {
+    return next({
+      path: '/',
       query: {
         ...to.query,
         auth: 'true',
         method: 'login'
-      }
+      },
     });
-  } else {
-    next();
+  }
+
+  try {
+    const response = await whoAmI();
+
+    if (!response || response.status !== 200) {
+      await logout(); // якщо не авторизований або сесія закінчилась
+      return next({
+        path: '/',
+        query: {
+          ...to.query,
+          auth: 'true',
+          method: 'login'
+        },
+      });
+    }
+
+    next(); // авторизований
+  } catch (error) {
+    await logout(); // помилка запиту — теж обробляємо як неавторизованого
+    return next({
+      path: '/',
+      query: {
+        ...to.query,
+        auth: 'true',
+        method: 'login'
+      },
+    });
   }
 });
 

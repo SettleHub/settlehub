@@ -9,7 +9,7 @@
       <div class="column_item">
         <div class="action-title-wrapper">
           <label class="action-title">
-            2. Завантажте підписану заяву з Дія.Підпис
+            2. Завантажте підписаний договір з Дія.Підпис
           </label>
           <ButtonComponent
               type="button"
@@ -21,12 +21,13 @@
               @click="showPopup($event)" />
         </div>
         <DownloadButton
-            :fileName="'zayava_lizhko-mistse.docx'"
-            :filePath="'/files/zayava_lizhko-mistse.docx'"
-            :className="'download_document'" />
+            label="Шаблон договору"
+            :fileName="'Типовий_договір_найму_жилого_приміщення_2.docx'"
+            :filePath="'/files/Типовий_договір_найму_жилого_приміщення_2.docx'"
+            :className="'download_docteleument'" />
         <div class="upload-item">
           <FileUploader
-              label="Завантажити заповнену заяву"
+              label="Завантажити заповнений договір"
               ref="fileUploader"
               v-model:modelFiles="this.internalStatementDocuments" />
         </div>
@@ -37,7 +38,7 @@
         </label>
         <div class="upload-item">
           <FileUploader
-              label="Завантажити заповнену заяву"
+              label="Завантажити скан паспорту"
               ref="fileUploader"
               v-model:modelFiles="this.internalPassportDocuments" />
         </div>
@@ -49,7 +50,7 @@
         <div class="upload-item">
 
           <FileUploader
-              label="Завантажити заповнену заяву"
+              label="Завантажити скан ідентифікаційного коду"
               ref="fileUploader"
               v-model:modelFiles="this.internalIdCodeDocuments" />
         </div>
@@ -59,11 +60,11 @@
     <div class="column expanded-column">
       <div class="column_item">
         <label class="action-title">
-          5. Завантажити фото
+          5. Завантажити фото в форматі 3x4
         </label>
         <div class="upload-item">
           <FileUploader
-              label="Завантажити заповнену заяву"
+              label="Завантажити фото в форматі 3x4"
               :uploadIcon="uploadPicturesIcon"
               ref="fileUploader"
               v-model:modelFiles="this.internalPhotoDocuments" />

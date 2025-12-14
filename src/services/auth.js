@@ -69,7 +69,7 @@ export async function getUserData() {
             return response.data;
         } else {
             // Якщо нема userId — звертаємось до /whoami
-            const whoAmIResponse = await api.get('/identity/whoami?json=true');
+            const whoAmIResponse = await whoAmI();
 
             const { username } = whoAmIResponse.data;
 
@@ -136,7 +136,7 @@ export async function updateUserContacts(email, phone, birthDate) {
 export function logout() {
     localStorage.removeItem("jwt");
     localStorage.removeItem("userId");
-    window.location.href = "/hostels";
+    window.location.href = "/hostels?auth=true&method=login";
 }
 
 
@@ -160,6 +160,12 @@ export async function resetForgottenPassword(username, code, password) {
             password,
         },
         Method.POST);
+}
+
+export async function whoAmI() {
+    return request('/identity/whoami?json=true',
+        {},
+        Method.GET);
 }
 
 export async function request(path, body, method) {
