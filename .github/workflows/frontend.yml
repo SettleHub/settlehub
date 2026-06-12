@@ -1,0 +1,81 @@
+name: Frontend Production Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker Image Tag'
+        required: true
+        default: 'latest'
+
+jobs:
+  ci:
+    uses: ./.github/workflows/vue-ci.yml
+    with:
+      service-name: settlehub
+
+  trufflehog:
+    uses: ./.github/workflows/trufflehog.yml
+    with:
+      working-directory: ./
+      service-name: settlehub
+    secrets: inherit
+
+  cd-publish:
+    needs: [ci, trufflehog]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/docker-cd.yml
+    with:
+      image-name: settlehub
+    secrets: inherit
+
+  deploy:
+    needs: [cd-publish]
+    runs-on: self-hosted
+    environment: production
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Copy compose.yml to Target Machine
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: "compose.yml"
+          target: "/opt/settlehub/frontend/"
+
+      - name: Deploy Frontend via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          API_GATEWAY_PROTOCOL: ${{ vars.API_GATEWAY_PROTOCOL }}
+          API_GATEWAY_ADDRESS: ${{ secrets.API_GATEWAY_ADDRESS }}
+          API_GATEWAY_PORT: ${{ secrets.API_GATEWAY_PORT }}
+          FRONTEND_ADDRESS: ${{ secrets.FRONTEND_ADDRESS }}
+          IMAGE_TAG: ${{ github.event.inputs.image_tag || 'latest' }}
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          envs: API_GATEWAY_PROTOCOL,API_GATEWAY_ADDRESS,API_GATEWAY_PORT,FRONTEND_ADDRESS,IMAGE_TAG
+          script: |
+            mkdir -p /opt/settlehub/frontend/
+            cd /opt/settlehub/frontend/
+
+            echo "API_GATEWAY_PROTOCOL=$API_GATEWAY_PROTOCOL" > .env
+            echo "API_GATEWAY_ADDRESS=$API_GATEWAY_ADDRESS" >> .env
+            echo "API_GATEWAY_PORT=$API_GATEWAY_PORT" >> .env
+            echo "FRONTEND_ADDRESS=$FRONTEND_ADDRESS" >> .env
+
+
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker pull ghcr.io/settlehub/settlehub:$IMAGE_TAG
+            
+            docker compose up -d
+            docker image prune -a -f --filter "until=24h"

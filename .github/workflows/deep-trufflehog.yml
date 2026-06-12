@@ -1,0 +1,28 @@
+name: Deep TruffleHog
+
+on:
+  workflow_run:
+    workflows: ["Frontend Production Pipeline"]
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0' # Every week 00:00
+
+jobs:
+  trufflehog-deep:
+    runs-on: self-hosted
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Deep Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
