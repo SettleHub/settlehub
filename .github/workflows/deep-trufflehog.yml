@@ -7,6 +7,7 @@ on:
       - completed
     branches:
       - main
+      - demo
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 0' # Every week 00:00

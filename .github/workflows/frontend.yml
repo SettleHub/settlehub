@@ -2,9 +2,9 @@ name: Frontend Production Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "demo" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "demo" ]
   workflow_dispatch:
     inputs:
       image_tag:
