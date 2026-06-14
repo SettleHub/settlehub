@@ -25,6 +25,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate .env for Vue build
+        run: |
+          echo "VUE_APP_API_GATEWAY_PROTOCOL=${{ vars.VUE_APP_API_GATEWAY_PROTOCOL }}" > .env
+          echo "VUE_APP_API_GATEWAY_ADDRESS=${{ secrets.VUE_APP_API_GATEWAY_ADDRESS }}" >> .env
+          echo "VUE_APP_API_GATEWAY_PORT=${{ secrets.VUE_APP_API_GATEWAY_PORT }}" >> .env
+          echo "VUE_APP_FRONTEND_ADDRESS=${{ secrets.VUE_APP_FRONTEND_ADDRESS }}" >> .env
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
