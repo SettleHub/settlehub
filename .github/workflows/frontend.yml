@@ -54,25 +54,24 @@ jobs:
       - name: Deploy Frontend via SSH
         uses: appleboy/ssh-action@v1.0.3
         env:
-          VUE_APP_API_GATEWAY_PROTOCOL: ${{ vars.API_GATEWAY_PROTOCOL }}
-          VUE_APP_API_GATEWAY_ADDRESS: ${{ secrets.API_GATEWAY_ADDRESS }}
-          API_GATEWAY_PORT: ${{ secrets.API_GATEWAY_PORT }}
-          FRONTEND_ADDRESS: ${{ secrets.FRONTEND_ADDRESS }}
+          VUE_APP_API_GATEWAY_PROTOCOL: ${{ vars.VUE_APP_API_GATEWAY_PROTOCOL }}
+          VUE_APP_API_GATEWAY_ADDRESS: ${{ secrets.VUE_APP_API_GATEWAY_ADDRESS }}
+          VUE_APP_API_GATEWAY_PORT: ${{ secrets.VUE_APP_API_GATEWAY_PORT }}
+          VUE_APP_FRONTEND_ADDRESS: ${{ secrets.VUE_APP_FRONTEND_ADDRESS }}
           IMAGE_TAG: ${{ github.event.inputs.image_tag || 'latest' }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          envs: VUE_APP_API_GATEWAY_PROTOCOL,VUE_APP_API_GATEWAY_ADDRESS,VUE_APP_API_GATEWAY_PORT,FRONTEND_ADDRESS,VUE_APP_FRONTEND_ADDRESS
+          envs: VUE_APP_API_GATEWAY_PROTOCOL,VUE_APP_API_GATEWAY_ADDRESS,VUE_APP_API_GATEWAY_PORT,VUE_APP_FRONTEND_ADDRESS
           script: |
             mkdir -p /opt/settlehub/frontend/
             cd /opt/settlehub/frontend/
 
             echo "VUE_APP_API_GATEWAY_PROTOCOL=$VUE_APP_API_GATEWAY_PROTOCOL" > .env
             echo "VUE_APP_API_GATEWAY_ADDRESS=$VUE_APP_API_GATEWAY_ADDRESS" >> .env
-            echo "API_GATEWAY_PORT=$API_GATEWAY_PORT" >> .env
+            echo "VUE_APP_API_GATEWAY_PORT=$VUE_APP_API_GATEWAY_PORT" >> .env
             echo "VUE_APP_FRONTEND_ADDRESS=$VUE_APP_FRONTEND_ADDRESS" >> .env
-
 
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker pull ghcr.io/settlehub/settlehub:$IMAGE_TAG
