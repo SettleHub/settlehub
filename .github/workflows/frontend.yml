@@ -27,7 +27,7 @@ jobs:
 
   cd-publish:
     needs: [ci, trufflehog]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo'
     uses: ./.github/workflows/docker-cd.yml
     with:
       image-name: settlehub
