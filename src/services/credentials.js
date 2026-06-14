@@ -1,3 +1,5 @@
-export const API_URL = "https://3.76.126.104/api";
+const API_GATEWAY_PROTOCOL = process.env.VUE_APP_API_GATEWAY_PROTOCOL || 'http';
+const API_GATEWAY_ADDRESS = process.env.VUE_APP_API_GATEWAY_ADDRESS || 'localhost';
+const API_GATEWAY_PORT = process.env.VUE_APP_API_GATEWAY_PORT || '8002';
 
-export const SUBMISSIONS_MAX_COUNT = 3;
+export const API_GATEWAY_URL = `${API_GATEWAY_PROTOCOL}://${API_GATEWAY_ADDRESS}:${API_GATEWAY_PORT}`;

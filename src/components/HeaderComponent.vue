@@ -12,33 +12,39 @@
     <div class="header_inner">
       <nav class="burger-menu-navigation">
         <Slide disableOutsideClick closeOnNavigation noOverlay :width="screenWidth">
-          <router-link to="/" class="nav_link">Головна</router-link>
-          <button v-if="hasJwt"
-                  @click="onChooseRoom"
-                  class="nav_link"
-          >
-            Обрати кімнату
-          </button>
-          <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link>
-          <router-link v-if="hasJwt" to="/personal-cabinet" class="nav_link">Особистий кабінет</router-link>
-          <button v-if="!hasJwt" @click="showPopup($event)" class="nav_link">Авторизуватись</button>
+            <router-link to="/" class="nav_link">Головна</router-link>
+            <!-- <button v-if="hasJwt"
+                    @click="onChooseRoom"
+                    class="nav_link"
+            >
+                Обрати кімнату
+            </button> -->
+            <!-- <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link> -->
+            <router-link v-if="hasJwt" to="/housekeeping" class="nav_link">Прибирання</router-link>
+            <router-link v-if="hasJwt" to="/profile" class="nav_link">Профіль</router-link>
+            <button v-if="!hasJwt" @click="showPopup($event)" class="nav_link">Авторизуватись</button>
+            <button v-if="hasJwt" @click="handleLogout()" class="nav_link">Вийти</button>
         </Slide>
       </nav>
       <div class="header_wrapper">
-        <div class="logo">
-          <img src="../assets/logo.picture.png" alt="KNUTD Logotype"/>
-        </div>
+        <router-link to="/">
+            <div class="logo">
+                <img src="../assets/logo.blue-transparent.png" alt="SettleHub Logo"/>
+            </div>
+        </router-link>
         <nav class="navigation">
-          <router-link to="/" class="nav_link">Головна</router-link>
-          <button v-if="hasJwt"
-                  @click="onChooseRoom"
-                  class="nav_link"
-          >
-            Обрати кімнату
-          </button>
-          <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link>
-          <router-link v-if="hasJwt" to="/personal-cabinet" class="nav_link">Особистий кабінет</router-link>
-          <button v-if="!hasJwt" @click="showPopup($event)" class="nav_link">Авторизуватись</button>
+            <router-link to="/" class="nav_link">Головна</router-link>
+            <!-- <button v-if="hasJwt"
+                    @click="onChooseRoom"
+                    class="nav_link"
+            >
+                Обрати кімнату
+            </button> -->
+            <!-- <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link> -->
+            <router-link v-if="hasJwt" to="/housekeeping" class="nav_link">Прибирання</router-link>
+            <router-link v-if="hasJwt" to="/profile" class="nav_link">Профіль</router-link>
+            <button v-if="!hasJwt" @click="showPopup($event)" class="nav_link">Авторизуватись</button>
+            <button v-if="hasJwt" @click="handleLogout()" class="nav_link">Вийти</button>
         </nav>
       </div>
     </div>
@@ -57,6 +63,7 @@ const { styles } = useFixedHeader(headerRef)
   import { Slide } from 'vue3-burger-menu';
   import AuthForm from "@/components/AuthForm.vue";
   import { getHostelNumber, getHostelFloor } from "@/services/selectStorage";
+  import { logout } from "@/services/auth";
 
   export default {
     name: "HeaderComponent",
@@ -107,6 +114,25 @@ const { styles } = useFixedHeader(headerRef)
           delete rest.method;
           delete rest.forgotPassword;
           this.$router.replace({ query: rest });
+        }
+      },
+      async handleLogout() {
+        const response = await logout();
+        if (response) {
+            if (response.status == 200) {
+                this.$router.replace({ path: this.$route.path, query: { auth: 'true', method: 'login' } })
+                    .then(() => {
+                        this.$router.go(0);
+                    });
+            } else {
+                this.$notify({
+                    title: "Сталася помилка!",
+                    text: `response.data`,
+                    type: "error"
+                });
+            }
+        } else {
+            this.$router.push({path: '/internal-error'});
         }
       },
       updateWidth() {
@@ -207,7 +233,7 @@ const { styles } = useFixedHeader(headerRef)
 
   .header_inner {
     background-color: $background-white;
-    padding: 35px 90px 39px;
+    padding: 20px 90px 24px;
     @include shadow-light;
 
   }
@@ -219,6 +245,10 @@ const { styles } = useFixedHeader(headerRef)
   
   .logo {
     @include locked-image;
+    width: 50px;
+    img {
+        width: 100%;
+    }
   }
   
   .navigation {

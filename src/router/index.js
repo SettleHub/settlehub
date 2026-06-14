@@ -4,6 +4,8 @@ import HomeView from "../views/HomeView.vue";
 import DocumentUploadView from "@/views/DocumentUploadView.vue";
 import HostelFloorsViewComponent from "@/views/HostelFloorsView.vue";
 import PersonalCabinetView from "@/views/PersonalCabinetView.vue";
+import Chessboard from "@/views/Chessboard.vue";
+import HousekeepingView from "@/views/HousekeepingView.vue";
 import InternalErrorView from "@/views/InternalErrorView.vue";
 import NotFoundErrorView from "@/views/NotFoundErrorView.vue";
 import { logout, whoAmI } from "@/services/auth";
@@ -16,8 +18,20 @@ const routes = [
     name: "Home",
     component: HomeView,
     beforeEnter: (to, from, next) => {
-      next(`/hostels`);
+      next(`/chessboard`);
     },
+  },
+  {
+    path: "/chessboard",
+    name: "Chessboard",
+    component: Chessboard,
+    props: true,
+  },
+  {
+    path: "/housekeeping",
+    name: "Housekeeping",
+    component: HousekeepingView,
+    props: true,
   },
   {
     path: "/hostels",
@@ -56,7 +70,7 @@ const routes = [
     component: DocumentUploadView
   },
   {
-    path: "/personal-cabinet",
+    path: "/profile",
     name: "personalCabinet",
     component: PersonalCabinetView
   },
@@ -78,12 +92,13 @@ const router = createRouter({
 });
 
 
+// eslint-disable-next-line no-unused-vars
 router.beforeEach(async (to, from, next) => {
-  const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwt');
   const requiresAuth = [
     '/upload-document',
     '/hostel/',
-    '/personal-cabinet',
+    '/profile',
   ].some(path => to.path.startsWith(path.replace(/:.*?\b/g, '')));
 
  

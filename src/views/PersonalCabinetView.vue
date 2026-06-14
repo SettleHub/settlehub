@@ -108,15 +108,6 @@
                 :className="'edit-button'"
                 @click="toEditing"
             />
-            <ButtonComponent
-                :label="'Вийти'"
-                :type="'button'"
-                :paddingH="70"
-                :paddingV="13"
-                :borderRadius="10"
-                :className="'logout-button'"
-                @click="handleLogout"
-            />
           </div>
         </div>
       </div>
@@ -195,7 +186,7 @@
 <script>
 import InputComponent from "@/components/InputComponent.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
-import {getUserData, logout, updateUserContacts} from "@/services/auth";
+import {getUserData, updateUserContacts} from "@/services/auth";
 import {getSubmissionsBySubmitter} from "@/services/submissions";
 import dayjs from 'dayjs';
 
@@ -259,9 +250,6 @@ export default {
     },
     toEditing() {
       this.isEditing = true;
-    },
-    handleLogout() {
-      logout();
     },
     async handleUserUpdate() {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -478,7 +466,6 @@ export default {
   }
 }
 ::v-deep(.edit-button),
-::v-deep(.logout-button),
 ::v-deep(.save-button),
 ::v-deep(.continue-button) {
   @include responsive-font(13, 8, 1440);
@@ -599,16 +586,6 @@ export default {
     @include responsive-font(16, 10, 1440);
     color: $text-dark-blue;
     margin-bottom: 22px;
-  }
-}
-
-::v-deep(.logout-button) {
-  @media (max-width: 1200px) {
-    padding: 9px 40px !important;
-  }
-  @media (max-width: 768px) {
-    padding: 6px 33px !important;
-    border-radius: 5px !important;
   }
 }
 

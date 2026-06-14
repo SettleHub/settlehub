@@ -4,34 +4,41 @@
       <div class="footer_wrapper">
         <div class="navigation_block">
           <div class="logo">
-            <img src="../assets/logo.picture.png" alt="KNUTD Logotype" />
+            <img src="../assets/logo.blue-with-name.png" alt="SettleHub Logo" />
           </div>
           <nav class="navigation">
             <router-link to="/" class="nav_link">Головна</router-link>
-            <button v-if="hasJwt"
+            <!-- <button v-if="hasJwt"
                     @click="onChooseRoom"
                     class="nav_link"
             >
               Обрати кімнату
             </button>
-            <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link>
-            <router-link v-if="hasJwt" to="/personal-cabinet" class="nav_link">Особистий кабінет</router-link>
+            <router-link v-if="hasJwt" to="/upload-document" class="nav_link">Завантаження документів</router-link> -->
+            <router-link v-if="hasJwt" to="/housekeeping" class="nav_link">Прибирання</router-link>
+            <router-link v-if="hasJwt" to="/profile" class="nav_link">Профіль</router-link>
             <button v-if="!hasJwt" @click="toAuthWindow" class="nav_link">Авторизуватись</button>
           </nav>
         </div>
         <div class="contacts_block">
           <p class="contacts_title">Контакти</p>
           <ul class="contacts_list">
-            <li>
+            <!-- <li>
               <a class="link-phone" href="tel: +380442885132">
                 <img src="../assets/phone.icon.svg" alt="phone" />
                 <p>+380442885132</p>
               </a>
+            </li> -->
+            <li>
+              <a class="link-email" href="mailto: hitechnic00074220@gmail.com">
+                <img src="../assets/email.icon.svg" alt="email" />
+                <p>hitechnic00074220@gmail.com</p>
+              </a>
             </li>
             <li>
-              <a class="link-email" href="mailto: nniiit@knutd.edu.ua">
+              <a class="link-email" href="mailto: karakai.vv@knutd.edu.ua">
                 <img src="../assets/email.icon.svg" alt="email" />
-                <p>nniiit@knutd.edu.ua</p>
+                <p>karakai.vv@knutd.edu.ua</p>
               </a>
             </li>
           </ul>
@@ -132,6 +139,10 @@ export default {
 
   .logo {
     @include locked-image;
+    width: 200px;
+    img {
+        width: 100%;
+    }
   }
 
   .contacts_title {

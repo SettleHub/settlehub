@@ -6,6 +6,5 @@ import velocity from 'velocity-animate'
 
 const app = createApp(App)
   app.use(router)
-  app.config.globalProperties.$api = "https://3.76.126.104/api"
   app.use(Notifications, { velocity })
   app.mount('#app');

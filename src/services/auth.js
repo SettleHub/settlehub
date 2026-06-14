@@ -1,8 +1,11 @@
 import axios from "axios";
-import {API_URL} from "@/services/credentials";
+import { API_GATEWAY_URL } from "./credentials";
 
 const api = axios.create({
-    baseURL: API_URL,
+    baseURL: `${API_GATEWAY_URL}/iam/api/`,
+    headers: {
+        'Content-Type': 'application/json',
+    }
 });
 
 // Додаємо токен до кожного запиту автоматично
@@ -33,6 +36,10 @@ export async function login(username, password) {
         if (token) {
             localStorage.setItem("jwt", token);
         }
+        const type = response.data.type;
+        if (type) {
+            localStorage.setItem("auth-type", type);
+        } 
         const userId = response.data.id;
         if (userId) {
             localStorage.setItem("userId", userId);
@@ -134,9 +141,13 @@ export async function updateUserContacts(email, phone, birthDate) {
 }
 
 export function logout() {
+    const response = request('/identity/logout',
+        {},
+        Method.GET);
     localStorage.removeItem("jwt");
     localStorage.removeItem("userId");
     window.location.href = "/hostels?auth=true&method=login";
+    return response;
 }
 
 
