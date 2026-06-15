@@ -5,12 +5,6 @@ services:
     restart: always
     ports:
       - "80:80"
-    environment:
-      - VUE_APP_API_GATEWAY_PROTOCOL=${VUE_APP_API_GATEWAY_PROTOCOL}
-      - VUE_APP_API_GATEWAY_ADDRESS=${VUE_APP_API_GATEWAY_ADDRESS}
-      - VUE_APP_API_GATEWAY_PORT=${VUE_APP_API_GATEWAY_PORT}
-
-      - VUE_APP_FRONTEND_ADDRESS=${VUE_APP_FRONTEND_ADDRESS}
 
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"]

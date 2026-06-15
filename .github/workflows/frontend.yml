@@ -27,7 +27,9 @@ jobs:
 
   cd-publish:
     needs: [ci, trufflehog]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo'
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo')
     uses: ./.github/workflows/docker-cd.yml
     with:
       image-name: settlehub
@@ -68,13 +70,10 @@ jobs:
             mkdir -p /opt/settlehub/frontend/
             cd /opt/settlehub/frontend/
 
-            echo "VUE_APP_API_GATEWAY_PROTOCOL=$VUE_APP_API_GATEWAY_PROTOCOL" > .env
-            echo "VUE_APP_API_GATEWAY_ADDRESS=$VUE_APP_API_GATEWAY_ADDRESS" >> .env
-            echo "VUE_APP_API_GATEWAY_PORT=$VUE_APP_API_GATEWAY_PORT" >> .env
-            echo "VUE_APP_FRONTEND_ADDRESS=$VUE_APP_FRONTEND_ADDRESS" >> .env
-
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ghcr.io/settlehub/settlehub:$IMAGE_TAG
             
-            docker compose up -d
+            docker compose pull
+            
+            docker compose up -d --force-recreate
+            
             docker image prune -a -f --filter "until=24h"
